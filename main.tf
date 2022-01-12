@@ -17,7 +17,7 @@ resource "google_compute_instance" "default" {
 	// Allow the instance to be stopped by terraform when updating configuration
   allow_stopping_for_update = var.allow_stopping_for_update
 
-  metadata_startup_script = var.enable_startup_script ? data.template_file.startup_script.rendered : null
+  metadata_startup_script = var.enable_startup_script ? data.template_file.startup_script[0].rendered : null
 
   network_interface {
     network = var.network
@@ -32,7 +32,7 @@ resource "google_compute_instance" "default" {
     for_each = var.create_service_account ? [{}] : []
     
     content {
-      email = google_service_account.bastion.email
+      email = google_service_account.default[0].email
       scopes = var.service_account_scopes
     }
   }
