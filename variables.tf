@@ -44,7 +44,7 @@ variable "boot_disk_image" {
 
 variable "boot_disk_size" {
   description = "The size of the image in gigabytes. If not specified, it will inherit the size of its base image."
-  type        = number
+  type        = string
 }
 
 variable "boot_disk_type" {
