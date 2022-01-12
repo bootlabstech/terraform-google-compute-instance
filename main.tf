@@ -33,7 +33,7 @@ resource "google_compute_instance" "default" {
     
     content {
       email = google_service_account.bastion.email
-      scopes = ["cloud-platform"]
+      scopes = var.service_account_scopes
     }
   }
 }

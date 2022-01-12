@@ -24,6 +24,7 @@ variable "project" {
 variable "tags" {
   type        = list(string)
   description = "A list of network tags to attach to the instance."
+  default     = null
 }
 
 variable "network" {
@@ -61,6 +62,12 @@ variable "create_service_account" {
   type        = bool
   description = "Create service account for the compute instance"
   default     = false
+}
+
+variable "service_account_scopes" {
+  type        = list(string)
+  description = "A list of service scopes. Both OAuth2 URLs and gcloud short names are supported. To allow full access to all Cloud APIs, use the cloud-platform scope."
+  default     = ["cloud-platform"]
 }
 
 variable "allow_stopping_for_update" {
