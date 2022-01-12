@@ -40,7 +40,7 @@ resource "google_compute_instance" "default" {
 
 data "template_file" "init" {
   count = "${var.enable_startup_script != null ? 1 : 0}"
-  template = "${file("${path.root}/startup.sh")}"
+  template = "${file("startup.sh")}"
 }
 
 resource "google_service_account" "default" {
