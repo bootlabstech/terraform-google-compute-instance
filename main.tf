@@ -20,7 +20,6 @@ resource "google_compute_instance" "default" {
   metadata_startup_script = var.enable_startup_script ? data.template_file.startup_script[0].rendered : null
 
   network_interface {
-    network = var.network
     subnetwork = var.subnetwork
 
     access_config {
