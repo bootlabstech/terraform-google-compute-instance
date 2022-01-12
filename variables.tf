@@ -24,7 +24,7 @@ variable "project" {
 variable "tags" {
   type        = list(string)
   description = "A list of network tags to attach to the instance."
-  default     = null
+  default     = []
 }
 
 variable "network" {
