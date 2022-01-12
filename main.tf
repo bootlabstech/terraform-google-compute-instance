@@ -38,7 +38,7 @@ resource "google_compute_instance" "default" {
   }
 }
 
-data "template_file" "init" {
+data "template_file" "startup_script" {
   count = "${var.enable_startup_script != null ? 1 : 0}"
   template = "${file("startup.sh")}"
 }
