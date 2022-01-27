@@ -23,11 +23,7 @@ resource "google_compute_instance" "default" {
     subnetwork = var.subnetwork
 
     access_config {
-      //Ephemeral IP
-    }
-
-    ipv6_access_config {
-      network_tier = "PREMIUM"
+      nat_ip = google_compute_address.static.address
     }
   }
 
@@ -51,4 +47,9 @@ resource "google_service_account" "default" {
   account_id   = format("%s-compute-instance", var.name)
   display_name = format("%s Compute Instance", var.name)
   project      = var.project
+}
+
+resource "google_compute_address" "static" {
+  name          = format("%s-external-ip", var.name)
+  project       = var.project
 }
