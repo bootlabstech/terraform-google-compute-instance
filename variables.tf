@@ -9,6 +9,10 @@ variable "machine_type" {
   description = "The machine type to create."
 }
 
+variable "region" {
+  type        = string
+  description = "The region that the compute address should be created in. If it is not provided, the provider zone is used."
+}
 // optional variables
 
 variable "zone" {
