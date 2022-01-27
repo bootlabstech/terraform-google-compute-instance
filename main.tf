@@ -51,6 +51,6 @@ resource "google_service_account" "default" {
 
 resource "google_compute_address" "static" {
   name          = format("%s-external-ip", var.name)
-  project       = var.project
-  region        = var.region
+  project       = var.compute_address_project
+  region        = var.compute_address_region
 }

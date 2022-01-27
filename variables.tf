@@ -9,9 +9,14 @@ variable "machine_type" {
   description = "The machine type to create."
 }
 
-variable "region" {
+variable "compute_address_region" {
   type        = string
   description = "The region that the compute address should be created in. If it is not provided, the provider zone is used."
+}
+
+variable "compute_address_project" {
+  type        = string
+  description = "The ID of the project in which the resource belongs. If it is not provided, the provider project is used."
 }
 // optional variables
 
