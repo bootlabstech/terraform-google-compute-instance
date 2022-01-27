@@ -27,7 +27,7 @@ resource "google_compute_instance" "default" {
     }
 
     ipv6_access_config {
-      
+      network_tier = "PREMIUM"
     }
   }
 
