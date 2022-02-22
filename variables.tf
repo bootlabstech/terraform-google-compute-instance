@@ -131,7 +131,7 @@ variable "compute_address_region" {
   type        = string
   description = <<-EOT
   {
-   "type": "json",
+   "type": "api",
    "purpose": "autocomplete",
    "data": "/api/v1/autocomplete/regions",
    "description": "The region that the compute address should be created in. If it is not provided, the provider region is used."
@@ -149,7 +149,7 @@ variable "zone" {
   type        = string
   description = <<-EOT
   {
-   "type": "json",
+   "type": "api",
    "purpose": "autocomplete",
    "data": "/api/v1/autocomplete/zones",
    "description": "The zone that the machine should be created in. If it is not provided, the provider zone is used."
