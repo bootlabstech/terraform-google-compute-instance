@@ -85,13 +85,13 @@ variable "allow_stopping_for_update" {
   default     = false
 }
 
-variable "kms_key_self_link " {
+variable "kms_key_self_link" {
   type        = string
   description = "The self_link of the encryption key that is stored in Google Cloud KMS to encrypt this disk."
   default     = ""
 }
 
-variable "address_type " {
+variable "address_type" {
   type        = string
   description = "The type of address to reserve. Default value is EXTERNAL. Possible values are INTERNAL and EXTERNAL"
   default     = "EXTERNAL"
