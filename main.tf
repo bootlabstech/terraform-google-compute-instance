@@ -36,6 +36,11 @@ resource "google_compute_instance" "default" {
       scopes = var.service_account_scopes
     }
   }
+
+  shielded_instance_config {
+    enable_secure_boot          = true
+    enable_integrity_monitoring = true
+  }
 }
 
 data "template_file" "startup_script" {
