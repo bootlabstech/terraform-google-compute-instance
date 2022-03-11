@@ -88,7 +88,7 @@ variable "allow_stopping_for_update" {
 variable "kms_key_self_link " {
   type        = string
   description = "The self_link of the encryption key that is stored in Google Cloud KMS to encrypt this disk."
-  default     = null
+  default     = ""
 }
 
 variable "address_type " {

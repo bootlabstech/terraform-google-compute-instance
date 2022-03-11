@@ -12,7 +12,7 @@ resource "google_compute_instance" "default" {
       type  = var.boot_disk_type
       image = var.boot_disk_image
     }
-    kms_key_self_link = var.kms_key_self_link
+    kms_key_self_link = var.kms_key_self_link == "" ? null : var.kms_key_self_link
   }
 
 	// Allow the instance to be stopped by terraform when updating configuration
