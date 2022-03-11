@@ -25,7 +25,10 @@ resource "google_compute_instance" "default" {
 
     dynamic access_config {
       for_each = var.address_type == "EXTERNAL" ? [{}] : []
-      nat_ip = var.address_type == "EXTERNAL" ? google_compute_address.static[0].address : null
+
+      content {
+        nat_ip = var.address_type == "EXTERNAL" ? google_compute_address.static[0].address : null
+      }
     }
   }
 
