@@ -108,17 +108,17 @@ VPC_PEERING for addresses that are reserved for VPC peer networks.
 IPSEC_INTERCONNECT for addresses created from a private IP range that are reserved for a VLAN attachment in an IPsec-encrypted Cloud Interconnect configuration. These addresses are regional resources.
 PRIVATE_SERVICE_CONNECT for a private network address that is used to configure Private Service Connect. Only global internal addresses can use this purpose. This should only be set when using an Internal address.
 EOT
-  default     = "EXTERNAL"
+  default     = ""
 }
 
 variable "address_subnetwork" {
   type        = string
   description = "The URL of the subnetwork in which to reserve the address. If an IP address is specified, it must be within the subnetwork's IP range. This field can only be used with INTERNAL type with GCE_ENDPOINT/DNS_RESOLVER purposes."
-  default     = null
+  default     = ""
 }
 
 variable "address_network" {
   type        = string
   description = "The URL of the network in which to reserve the address. This field can only be used with INTERNAL type with the VPC_PEERING and IPSEC_INTERCONNECT purposes."
-  default     = null
+  default     = ""
 }

@@ -55,7 +55,7 @@ resource "google_compute_address" "static" {
   project       = var.compute_address_project
   region        = var.compute_address_region
   address_type  = var.address_type
-  purpose       = var.purpose
-  subnetwork    = var.address_subnetwork
-  network       = var.address_network
+  purpose       = var.purpose == "" ? null : var.purpose
+  subnetwork    = var.address_subnetwork == "" ? null : var.address_subnetwork
+  network       = var.address_network == "" ? null : var.address_network 
 }
