@@ -12,6 +12,7 @@ resource "google_compute_instance" "default" {
       type  = var.boot_disk_type
       image = var.boot_disk_image
     }
+    kms_key_self_link = var.kms_key_self_link
   }
 
 	// Allow the instance to be stopped by terraform when updating configuration
@@ -53,4 +54,8 @@ resource "google_compute_address" "static" {
   name          = format("%s-external-ip", var.name)
   project       = var.compute_address_project
   region        = var.compute_address_region
+  address_type  = var.address_type
+  purpose       = var.purpose
+  subnetwork    = var.address_subnetwork
+  network       = var.address_network
 }

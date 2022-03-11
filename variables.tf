@@ -84,3 +84,41 @@ variable "allow_stopping_for_update" {
   description = "If true, allows Terraform to stop the instance to update its properties. If you try to update a property that requires stopping the instance without setting this field, the update will fail."
   default     = false
 }
+
+variable "kms_key_self_link " {
+  type        = string
+  description = "The self_link of the encryption key that is stored in Google Cloud KMS to encrypt this disk."
+  default     = null
+}
+
+variable "address_type " {
+  type        = string
+  description = "The type of address to reserve. Default value is EXTERNAL. Possible values are INTERNAL and EXTERNAL"
+  default     = "EXTERNAL"
+}
+
+variable "purpose" {
+  type        = string
+  description = <<-EOT
+The purpose of this resource, which can be one of the following values:
+
+GCE_ENDPOINT for addresses that are used by VM instances, alias IP ranges, internal load balancers, and similar resources.
+SHARED_LOADBALANCER_VIP for an address that can be used by multiple internal load balancers.
+VPC_PEERING for addresses that are reserved for VPC peer networks.
+IPSEC_INTERCONNECT for addresses created from a private IP range that are reserved for a VLAN attachment in an IPsec-encrypted Cloud Interconnect configuration. These addresses are regional resources.
+PRIVATE_SERVICE_CONNECT for a private network address that is used to configure Private Service Connect. Only global internal addresses can use this purpose. This should only be set when using an Internal address.
+EOT
+  default     = "EXTERNAL"
+}
+
+variable "address_subnetwork" {
+  type        = string
+  description = "The URL of the subnetwork in which to reserve the address. If an IP address is specified, it must be within the subnetwork's IP range. This field can only be used with INTERNAL type with GCE_ENDPOINT/DNS_RESOLVER purposes."
+  default     = null
+}
+
+variable "address_network" {
+  type        = string
+  description = "The URL of the network in which to reserve the address. This field can only be used with INTERNAL type with the VPC_PEERING and IPSEC_INTERCONNECT purposes."
+  default     = null
+}
