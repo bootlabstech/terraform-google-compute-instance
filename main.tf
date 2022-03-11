@@ -24,7 +24,7 @@ resource "google_compute_instance" "default" {
     subnetwork = var.subnetwork
 
     access_config {
-      nat_ip = google_compute_address.static.address
+      nat_ip = var.address_type == "EXTERNAL" ? google_compute_address.static.address : null
     }
   }
 
