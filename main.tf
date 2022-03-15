@@ -12,6 +12,7 @@ resource "google_compute_instance" "default" {
       type  = var.boot_disk_type
       image = var.boot_disk_image
     }
+    kms_key_self_link = var.kms_key_self_link == "" ? null : var.kms_key_self_link
   }
 
 	// Allow the instance to be stopped by terraform when updating configuration
@@ -22,8 +23,12 @@ resource "google_compute_instance" "default" {
   network_interface {
     subnetwork = var.subnetwork
 
-    access_config {
-      nat_ip = google_compute_address.static.address
+    dynamic access_config {
+      for_each = var.address_type == "EXTERNAL" ? [{}] : []
+
+      content {
+        nat_ip = var.address_type == "EXTERNAL" ? google_compute_address.static[0].address : null
+      }
     }
   }
 
@@ -34,6 +39,11 @@ resource "google_compute_instance" "default" {
       email = google_service_account.default[0].email
       scopes = var.service_account_scopes
     }
+  }
+
+  shielded_instance_config {
+    enable_secure_boot          = true
+    enable_integrity_monitoring = true
   }
 }
 
@@ -50,7 +60,9 @@ resource "google_service_account" "default" {
 }
 
 resource "google_compute_address" "static" {
+  count         = var.address_type == "INTERNAL" ? 0 : 1
   name          = format("%s-external-ip", var.name)
   project       = var.compute_address_project
   region        = var.compute_address_region
+  address_type  = var.address_type
 }
