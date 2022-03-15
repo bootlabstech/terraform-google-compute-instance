@@ -44,7 +44,7 @@ data "template_file" "startup_script" {
 
 resource "google_service_account" "default" {
 	count = "${var.create_service_account ? 1 : 0}"
-  account_id   = format("%s-compute-instance", var.name)
+  account_id   = format("%s-ci", var.name)
   display_name = format("%s Compute Instance", var.name)
   project      = var.project
 }
