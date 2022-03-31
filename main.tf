@@ -45,6 +45,10 @@ resource "google_compute_instance" "default" {
     enable_secure_boot          = true
     enable_integrity_monitoring = true
   }
+
+  timeouts {
+    create = "10m"
+  }
 }
 
 data "template_file" "startup_script" {
