@@ -18,7 +18,7 @@ resource "google_compute_instance" "default" {
 	// Allow the instance to be stopped by terraform when updating configuration
   allow_stopping_for_update = var.allow_stopping_for_update
 
-  metadata_startup_script = var.enable_startup_script ? data.template_file.startup_script[0].rendered : null
+  metadata_startup_script = var.enable_startup_script ? templatefile("${path.module}/startup.sh", {}) : null
 
   network_interface {
     subnetwork = var.subnetwork
@@ -49,11 +49,6 @@ resource "google_compute_instance" "default" {
   timeouts {
     create = "10m"
   }
-}
-
-data "template_file" "startup_script" {
-  count = "${var.enable_startup_script != null ? 1 : 0}"
-  template = "${file("startup.sh")}"
 }
 
 resource "google_service_account" "default" {
