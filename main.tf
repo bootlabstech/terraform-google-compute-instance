@@ -59,7 +59,7 @@ resource "google_service_account" "default" {
 }
 
 resource "google_compute_address" "static" {
-  count         = var.address_type == "INTERNAL" ? 0 : 1
+  count         = var.address_type == "INTERNAL" ? (var.address == "" ? 0 : 1) : 1
   name          = format("%s-external-ip", var.name)
   project       = var.compute_address_project
   region        = var.compute_address_region
