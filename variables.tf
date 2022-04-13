@@ -96,3 +96,8 @@ variable "address_type" {
   description = "The type of address to reserve. Default value is EXTERNAL. Possible values are INTERNAL and EXTERNAL"
   default     = "EXTERNAL"
 }
+
+variable "address" {
+  type        = string
+  description = "The ip"
+}
