@@ -24,10 +24,10 @@ resource "google_compute_instance" "default" {
     subnetwork = var.subnetwork
 
     dynamic access_config {
-      for_each = var.address_type == "EXTERNAL" ? [{}] : []
+      for_each = var.address_type == "EXTERNAL" ? [{}] : (var.address == "" ? [] : [{}])
 
       content {
-        nat_ip = var.address_type == "EXTERNAL" ? google_compute_address.static[0].address : null
+        nat_ip = var.address_type == "EXTERNAL" ? google_compute_address.static[0].address : (var.address == "" ? null : google_compute_address.static[0].address)
       }
     }
   }
