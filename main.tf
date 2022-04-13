@@ -64,4 +64,5 @@ resource "google_compute_address" "static" {
   project       = var.compute_address_project
   region        = var.compute_address_region
   address_type  = var.address_type
+  address       = var.address_type == "INTERNAL" ? (var.address == "" ? null : var.address) : null	
 }
