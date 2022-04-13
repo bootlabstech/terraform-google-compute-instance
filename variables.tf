@@ -99,5 +99,6 @@ variable "address_type" {
 
 variable "address" {
   type        = string
-  description = "The ip"
+  description = "The private ip of the compute-instance"
+  default      = ""
 }
