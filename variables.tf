@@ -94,7 +94,6 @@ variable "kms_key_self_link" {
 variable "address_type" {
   type        = string
   description = "The type of address to reserve. Default value is EXTERNAL. Possible values are INTERNAL and EXTERNAL"
-  default     = "EXTERNAL"
 }
 
 variable "address" {
