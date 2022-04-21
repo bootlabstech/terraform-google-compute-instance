@@ -3,7 +3,10 @@ variable "name" {
   type        = string
   description = "A unique name for the resource, required by GCE. Changing this forces a new resource to be created."
 }
-
+variable "no_of_instances" {
+  type        = number
+  description = "No of instances u want to lauch of the same type."
+}
 variable "machine_type" {
   type        = string
   description = "The machine type to create."
