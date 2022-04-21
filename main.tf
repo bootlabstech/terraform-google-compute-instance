@@ -1,5 +1,6 @@
 resource "google_compute_instance" "default" {
-  name         = var.name
+  count        = var.no_of_instances
+  name         = "var.name-$(count.index+1)"
   machine_type = var.machine_type
   zone         = var.zone
   project      = var.project
@@ -47,7 +48,7 @@ resource "google_compute_instance" "default" {
   }
 
   timeouts {
-    create = "10m"
+    create = "20m"
   }
 }
 
