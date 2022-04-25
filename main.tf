@@ -20,7 +20,7 @@ resource "google_compute_instance" "default" {
 
   metadata_startup_script = var.enable_startup_script ? templatefile("${path.module}/startup.sh", {}) : null
 
-  metadata {
+  metadata = {
     enable-oslogin = "TRUE"
   }
   network_interface {
