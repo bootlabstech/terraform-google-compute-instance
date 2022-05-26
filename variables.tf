@@ -101,3 +101,35 @@ variable "address" {
   description = "The private ip of the compute-instance"
   default      = ""
 }
+
+# schedule-instance-start-stop
+variable "resource_policy" {
+  type        = string
+  description = " The name of sceduled policy should be created"
+}
+
+variable "description" {
+  type        = string
+  description = "The name of start and stop"
+}
+
+variable "time_zone" {
+  type        = string
+  description = "the time zone to be used in interpreting the schedule"
+}
+
+variable "vm-scheduled_start" {
+  type        = string
+  description = "The schedule for starting instances. see more https://cloud.google.com/compute/docs/instances/schedule-instance-start-stop"
+}
+
+variable "vm-scheduled_stop" {
+  type        = string
+  description = "the schedule for stopping instances"
+}
+
+variable "scheduling_enabled" {
+  type        = bool
+  description = "The schedule vm is need to be true but the default is false"
+  default     = false
+}

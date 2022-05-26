@@ -5,7 +5,10 @@ resource "google_compute_instance" "default" {
   project      = var.project
 
   tags = var.tags
-
+  
+  resource_policies = [
+    google_compute_resource_policy.schedule_vm.id
+  ]
   boot_disk {
     initialize_params {
       size  = var.boot_disk_size
@@ -70,3 +73,22 @@ resource "google_compute_address" "static" {
   subnetwork    = var.subnetwork
   address       = var.address_type == "INTERNAL" ? (var.address == "" ? null : var.address) : null	
 }
+
+
+resource "google_compute_resource_policy" "schedule_vm" {
+  count        = var.scheduling_enabled ? 1 : 0
+  name         = var.resource_policy
+  project      = var.project
+  region       = var.compute_address_region
+  description  = var.description
+  instance_schedule_policy {
+    vm_start_schedule {
+      schedule = var.vm-scheduled_start
+    }
+    vm_stop_schedule {
+      schedule = var.vm-scheduled_stop
+    }
+    time_zone  = var.time_zone
+  }
+}
+
