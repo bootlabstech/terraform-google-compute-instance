@@ -6,7 +6,7 @@ resource "google_compute_instance" "default" {
 
   tags = var.tags
 
-  resource_policies = var.scheduling_enabled ? [google_compute_resource_policy.schedule_vm.id] : []
+  resource_policies = var.scheduling_enabled ? [google_compute_resource_policy.schedule_vm[0].id] : []
   boot_disk {
     initialize_params {
       size  = var.boot_disk_size
