@@ -90,3 +90,4 @@ resource "google_compute_resource_policy" "schedule_vm" {
   }
 }
 
+
