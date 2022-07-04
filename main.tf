@@ -19,7 +19,7 @@ resource "google_compute_instance" "default" {
   // Allow the instance to be stopped by terraform when updating configuration
   allow_stopping_for_update = var.allow_stopping_for_update
 
-  metadata_startup_script = var.enable_startup_script ? templatefile("./startup.sh", {}) : null
+  metadata_startup_script = var.enable_startup_script ? templatefile("${path.root}/startup.sh", {}) : null
 
   metadata = {
     enable-oslogin = "TRUE"
