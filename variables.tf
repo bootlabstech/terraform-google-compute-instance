@@ -134,10 +134,10 @@ variable "scheduling_enabled" {
   default     = false
 }
 variable "enable_secure_boot" {
-  type = bool
+  type        = bool
   description = "(optional) describe your variable"
 }
 variable "enable_integrity_monitoring" {
-  type = bool
+  type        = bool
   description = "(optional) describe your variable"
 }
