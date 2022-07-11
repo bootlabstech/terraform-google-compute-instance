@@ -46,8 +46,8 @@ resource "google_compute_instance" "default" {
   }
 
   shielded_instance_config {
-    enable_secure_boot          = true
-    enable_integrity_monitoring = true
+    enable_secure_boot          = var.enable_secure_boot
+    enable_integrity_monitoring = var.enable_integrity_monitoring
   }
 
   timeouts {
