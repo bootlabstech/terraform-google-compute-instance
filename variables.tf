@@ -40,11 +40,11 @@ variable "network" {
   type        = string
   description = " The name or self_link of the network to attach this interface to. Either network or subnetwork must be provided. If network isn't provided it will be inferred from the subnetwork."
 }
-
+/*
 variable "subnetwork" {
   type        = string
   description = "The name or self_link of the subnetwork to attach this interface to. Either network or subnetwork must be provided. If network isn't provided it will be inferred from the subnetwork. The subnetwork must exist in the same region this instance will be created in. If the network resource is in legacy mode, do not specify this field. If the network is in auto subnet mode, specifying the subnetwork is optional. If the network is in custom subnet mode, specifying the subnetwork is required."
-}
+}*/
 
 variable "boot_disk_image" {
   description = "The image from which to initialize this disk. This can be one of: the image's self_link, projects/{project}/global/images/{image}, projects/{project}/global/images/family/{family}, global/images/{image}, global/images/family/{family}, family/{family}, {project}/{family}, {project}/{image}, {family}, or {image}. If referred by family, the images names must include the family name. If they don't, use the google_compute_image data source. For instance, the image centos-6-v20180104 includes its family name centos-6. These images can be referred by family name here."
@@ -90,6 +90,14 @@ variable "kms_key_self_link" {
   description = "The self_link of the encryption key that is stored in Google Cloud KMS to encrypt this disk."
   default     = ""
 }
+
+
+variable "final" {
+  type        = string
+  description = "The final value of metadata startup script"
+  default     = ""
+}
+
 
 variable "address_type" {
   type        = string

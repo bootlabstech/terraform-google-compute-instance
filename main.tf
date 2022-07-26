@@ -1,3 +1,8 @@
+locals{
+  is_win = length(regexall("(windows)", var.boot_disk_image))
+  final = local.is_win > 0 ? "tzutil /s 'India Standard Time'":"var.enable_startup_script ? templatefile(\"${path.root}/startup.sh\", {}) : null" 
+  }
+
 resource "google_compute_instance" "default" {
   name         = var.name
   machine_type = var.machine_type
@@ -18,8 +23,10 @@ resource "google_compute_instance" "default" {
 
   // Allow the instance to be stopped by terraform when updating configuration
   allow_stopping_for_update = var.allow_stopping_for_update
+  
+  
+  metadata_startup_script = local.final
 
-  metadata_startup_script = var.enable_startup_script ? templatefile("${path.root}/startup.sh", {}) : null
 
   metadata = {
     enable-oslogin = "TRUE"
@@ -29,6 +36,7 @@ resource "google_compute_instance" "default" {
 
     dynamic "access_config" {
       for_each = var.address_type == "EXTERNAL" ? [{}] : (var.address == "" ? [] : [{}])
+
 
       content {
         nat_ip = var.address_type == "EXTERNAL" ? google_compute_address.static[0].address : (var.address == "" ? null : google_compute_address.static[0].address)
