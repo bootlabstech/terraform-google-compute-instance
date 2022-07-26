@@ -3,10 +3,7 @@ variable "name" {
   type        = string
   description = "A unique name for the resource, required by GCE. Changing this forces a new resource to be created."
 }
-variable "no_of_instances" {
-  type        = number
-  description = "No of instances u want to lauch of the same type."
-}
+
 variable "machine_type" {
   type        = string
   description = "The machine type to create."
@@ -43,11 +40,11 @@ variable "network" {
   type        = string
   description = " The name or self_link of the network to attach this interface to. Either network or subnetwork must be provided. If network isn't provided it will be inferred from the subnetwork."
 }
-
+/*
 variable "subnetwork" {
   type        = string
   description = "The name or self_link of the subnetwork to attach this interface to. Either network or subnetwork must be provided. If network isn't provided it will be inferred from the subnetwork. The subnetwork must exist in the same region this instance will be created in. If the network resource is in legacy mode, do not specify this field. If the network is in auto subnet mode, specifying the subnetwork is optional. If the network is in custom subnet mode, specifying the subnetwork is required."
-}
+}*/
 
 variable "boot_disk_image" {
   description = "The image from which to initialize this disk. This can be one of: the image's self_link, projects/{project}/global/images/{image}, projects/{project}/global/images/family/{family}, global/images/{image}, global/images/family/{family}, family/{family}, {project}/{family}, {project}/{image}, {family}, or {image}. If referred by family, the images names must include the family name. If they don't, use the google_compute_image data source. For instance, the image centos-6-v20180104 includes its family name centos-6. These images can be referred by family name here."
@@ -85,5 +82,60 @@ variable "service_account_scopes" {
 variable "allow_stopping_for_update" {
   type        = bool
   description = "If true, allows Terraform to stop the instance to update its properties. If you try to update a property that requires stopping the instance without setting this field, the update will fail."
+  default     = false
+}
+
+variable "kms_key_self_link" {
+  type        = string
+  description = "The self_link of the encryption key that is stored in Google Cloud KMS to encrypt this disk."
+  default     = ""
+}
+
+variable "final" {
+  type        = string
+  description = "The final value of metadata startup script"
+  default     = ""
+}
+
+variable "address_type" {
+  type        = string
+  description = "The type of address to reserve. Default value is EXTERNAL. Possible values are INTERNAL and EXTERNAL"
+}
+
+variable "address" {
+  type        = string
+  description = "The private ip of the compute-instance"
+  default      = ""
+}
+
+# schedule-instance-start-stop
+variable "resource_policy" {
+  type        = string
+  description = " The name of sceduled policy should be created"
+}
+
+variable "description" {
+  type        = string
+  description = "The name of start and stop"
+}
+
+variable "time_zone" {
+  type        = string
+  description = "the time zone to be used in interpreting the schedule"
+}
+
+variable "vm-scheduled_start" {
+  type        = string
+  description = "The schedule for starting instances. see more https://cloud.google.com/compute/docs/instances/schedule-instance-start-stop"
+}
+
+variable "vm-scheduled_stop" {
+  type        = string
+  description = "the schedule for stopping instances"
+}
+
+variable "scheduling_enabled" {
+  type        = bool
+  description = "The schedule vm is need to be true but the default is false"
   default     = false
 }
