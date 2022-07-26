@@ -27,14 +27,16 @@ resource "google_compute_instance" "default" {
   
   metadata_startup_script = local.final
 
+
   metadata = {
     enable-oslogin = "TRUE"
   }
   network_interface {
-    #subnetwork = var.subnetwork
+    subnetwork = var.subnetwork
 
     dynamic "access_config" {
       for_each = var.address_type == "EXTERNAL" ? [{}] : (var.address == "" ? [] : [{}])
+
 
       content {
         nat_ip = var.address_type == "EXTERNAL" ? google_compute_address.static[0].address : (var.address == "" ? null : google_compute_address.static[0].address)
@@ -74,7 +76,7 @@ resource "google_compute_address" "static" {
   project      = var.compute_address_project
   region       = var.compute_address_region
   address_type = var.address_type
-  #subnetwork   = var.subnetwork
+  subnetwork   = var.subnetwork
   address      = var.address_type == "INTERNAL" ? (var.address == "" ? null : var.address) : null
 }
 

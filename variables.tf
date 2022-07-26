@@ -91,11 +91,13 @@ variable "kms_key_self_link" {
   default     = ""
 }
 
+
 variable "final" {
   type        = string
   description = "The final value of metadata startup script"
   default     = ""
 }
+
 
 variable "address_type" {
   type        = string
