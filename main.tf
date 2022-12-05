@@ -1,7 +1,8 @@
 resource "google_compute_instance" "default" {
-  name         = var.name
-  machine_type = var.machine_type
-  zone         = var.zone
+  for_each     = var.instances
+  name         = each.value.name
+  machine_type = each.value.machine_type
+  zone         = each.value.zone
   project      = var.project
 
   tags = var.tags
@@ -9,9 +10,9 @@ resource "google_compute_instance" "default" {
   resource_policies = var.scheduling_enabled ? [google_compute_resource_policy.schedule_vm[0].id] : []
   boot_disk {
     initialize_params {
-      size  = var.boot_disk_size
-      type  = var.boot_disk_type
-      image = var.boot_disk_image
+      size  = each.value.boot_disk_size
+      type  = each.value.boot_disk_type
+      image = each.value.boot_disk_image
     }
     kms_key_self_link = var.kms_key_self_link == "" ? null : var.kms_key_self_link
   }

@@ -133,3 +133,13 @@ variable "scheduling_enabled" {
   description = "The schedule vm is need to be true but the default is false"
   default     = false
 }
+variable "instances" {
+  type = list(object({
+    name            = string,
+    machine_type    = string,
+    zone            = string,
+    boot_disk_size  = string,
+    boot_disk_type  = string,
+    boot_disk_image = string,
+  }))
+}
