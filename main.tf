@@ -58,14 +58,14 @@ resource "google_compute_instance" "default" {
 
 resource "google_service_account" "default" {
   count        = var.create_service_account ? 1 : 0
-  account_id   = format("%s-ci", var.name)
-  display_name = format("%s Compute Instance", var.name)
+  account_id   = format("%s-ci",var.name)
+  display_name = format("%s Compute Instance",var.name)
   project      = var.project
 }
 
 resource "google_compute_address" "static" {
   count        = var.address_type == "INTERNAL" ? (var.address == "" ? 0 : 1) : 1
-  name         = format("%s-external-ip", var.name)
+  name         = format("%s-external-ip",var.name)
   project      = var.compute_address_project
   region       = var.compute_address_region
   address_type = var.address_type
