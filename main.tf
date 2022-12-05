@@ -1,5 +1,5 @@
 resource "google_compute_instance" "default" {
-  for_each     = var.instances
+  for_each     = toset(var.instances)
   name         = each.value.name
   machine_type = each.value.machine_type
   zone         = each.value.zone
