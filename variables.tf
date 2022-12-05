@@ -1,4 +1,34 @@
 // required variables
+
+variable "no_of_instances" {
+  type        = number
+  description = "The number of instances to be created."
+}
+variable "name_of_instances" {
+  type        = list(string)
+  description = "The name of instances to be created."
+}
+variable "machine_type" {
+  type        = string
+  description = "The type of machine to be created."
+}
+variable "zone" {
+  type        = string
+  description = "The zone of the VM."
+}
+variable "boot_disk_size" {
+  type        = number
+  description = "The boot_disk_size of the VM."
+}
+variable "boot_disk_type" {
+  type        = string
+  description = "The boot_disk_type of the VM."
+}
+variable "boot_disk_image" {
+  type        = string
+  description = "The boot_disk_image of the VM."
+}
+
 variable "compute_address_region" {
   type        = string
   description = "The region that the compute address should be created in. If it is not provided, the provider zone is used."
@@ -7,10 +37,7 @@ variable "compute_address_project" {
   type        = string
   description = "The ID of the project in which the resource belongs. If it is not provided, the provider project is used."
 }
-variable "name" {
-  type        = string
-  description = "The name of the compute_instance"
-}
+
 // optional variables
 
 variable "project" {
@@ -97,14 +124,4 @@ variable "scheduling_enabled" {
   type        = bool
   description = "The schedule vm is need to be true but the default is false"
   default     = false
-}
-variable "instances" {
-  type = list(object({
-    name            = string,
-    machine_type    = string,
-    zone            = string,
-    boot_disk_size  = string,
-    boot_disk_type  = string,
-    boot_disk_image = string,
-  }))
 }

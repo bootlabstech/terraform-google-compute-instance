@@ -1,8 +1,8 @@
 resource "google_compute_instance" "default" {
-  for_each     = toset(var.instances)
-  name         = each.value.name
-  machine_type = each.value.machine_type
-  zone         = each.value.zone
+  count        = var.no_of_instances
+  name         = var.name_of_instances[count.index]
+  machine_type = var.machine_type
+  zone         = var.zone
   project      = var.project
 
   tags = var.tags
@@ -10,9 +10,9 @@ resource "google_compute_instance" "default" {
   resource_policies = var.scheduling_enabled ? [google_compute_resource_policy.schedule_vm[0].id] : []
   boot_disk {
     initialize_params {
-      size  = each.value.boot_disk_size
-      type  = each.value.boot_disk_type
-      image = each.value.boot_disk_image
+      size  = var.boot_disk_size
+      type  = var.boot_disk_type
+      image = var.boot_disk_image
     }
     kms_key_self_link = var.kms_key_self_link == "" ? null : var.kms_key_self_link
   }
@@ -58,21 +58,19 @@ resource "google_compute_instance" "default" {
 
 resource "google_service_account" "default" {
   count        = var.create_service_account ? 1 : 0
-  account_id   = format("%s-ci",var.name)
-  display_name = format("%s Compute Instance",var.name)
+  account_id   = "service-account-id"
   project      = var.project
 }
 
 resource "google_compute_address" "static" {
   count        = var.address_type == "INTERNAL" ? (var.address == "" ? 0 : 1) : 1
-  name         = format("%s-external-ip",var.name)
+  name         = "compute-address"
   project      = var.compute_address_project
   region       = var.compute_address_region
   address_type = var.address_type
   subnetwork   = var.subnetwork
   address      = var.address_type == "INTERNAL" ? (var.address == "" ? null : var.address) : null
 }
-
 
 resource "google_compute_resource_policy" "schedule_vm" {
   count       = var.scheduling_enabled ? 1 : 0
