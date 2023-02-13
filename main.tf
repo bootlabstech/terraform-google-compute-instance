@@ -54,6 +54,9 @@ resource "google_compute_instance" "default" {
   timeouts {
     create = "10m"
   }
+  lifecycle {
+    ignore_changes = [attached_disk]
+  }
 }
 
 resource "google_service_account" "default" {
