@@ -125,3 +125,8 @@ variable "scheduling_enabled" {
   description = "The schedule vm is need to be true but the default is false"
   default     = false
 }
+variable "additional_disk_name" {
+  type        = string
+  description = "The schedule vm is need to be true but the default is false"
+
+}

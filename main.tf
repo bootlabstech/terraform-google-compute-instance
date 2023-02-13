@@ -54,6 +54,9 @@ resource "google_compute_instance" "default" {
   timeouts {
     create = "10m"
   }
+  attached_disk{
+  source = var.additional_disk_name
+  }
   lifecycle {
     ignore_changes = [attached_disk]
   }
