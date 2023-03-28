@@ -7,7 +7,7 @@ resource "google_compute_instance" "default" {
 
   tags = var.tags
 
-  resource_policies = var.scheduling_enabled ? [google_compute_resource_policy.schedule_vm[0].id] : []
+  # resource_policies = var.scheduling_enabled ? [google_compute_resource_policy.schedule_vm[0].id] : []
   boot_disk {
     initialize_params {
       size  = var.boot_disk_size
@@ -28,13 +28,13 @@ resource "google_compute_instance" "default" {
   network_interface {
     subnetwork = var.subnetwork
 
-    dynamic "access_config" {
-      for_each = var.address_type == "EXTERNAL" ? [{}] : (var.address == "" ? [] : [{}])
+    # dynamic "access_config" {
+    #   for_each = var.address_type == "EXTERNAL" ? [{}] : (var.address == "" ? [] : [{}])
 
-      content {
-        nat_ip = var.address_type == "EXTERNAL" ? google_compute_address.static[0].address : (var.address == "" ? null : google_compute_address.static[0].address)
-      }
-    }
+    #   content {
+    #     nat_ip = var.address_type == "EXTERNAL" ? google_compute_address.static[0].address : (var.address == "" ? null : google_compute_address.static[0].address)
+    #   }
+    # }
   }
 
   dynamic "service_account" {
@@ -54,14 +54,12 @@ resource "google_compute_instance" "default" {
   timeouts {
     create = "10m"
   }
-  attached_disk{
-  source = var.additional_disk_name
-  }
+
   lifecycle {
     ignore_changes = [attached_disk]
   }
 }
-
+ 
 resource "google_service_account" "default" {
   count        = var.create_service_account ? 1 : 0
   account_id   = "service-account-id"
@@ -78,21 +76,19 @@ resource "google_compute_address" "static" {
   address      = var.address_type == "INTERNAL" ? (var.address == "" ? null : var.address) : null
 }
 
-resource "google_compute_resource_policy" "schedule_vm" {
-  count       = var.scheduling_enabled ? 1 : 0
-  name        = var.resource_policy
-  project     = var.project
-  region      = var.compute_address_region
-  description = var.description
-  instance_schedule_policy {
-    vm_start_schedule {
-      schedule = var.vm-scheduled_start
-    }
-    vm_stop_schedule {
-      schedule = var.vm-scheduled_stop
-    }
-    time_zone = var.time_zone
-  }
-}
-
-
+# resource "google_compute_resource_policy" "schedule_vm" {
+#   count       = var.scheduling_enabled ? 1 : 0
+#   name        = var.resource_policy
+#   project     = var.project
+#   region      = var.compute_address_region
+#   description = var.description
+#   instance_schedule_policy {
+#     vm_start_schedule {
+#       schedule = var.vm-scheduled_start
+#     }
+#     vm_stop_schedule {
+#       schedule = var.vm-scheduled_stop
+#     }
+#     time_zone = var.time_zone
+#   }
+# }
