@@ -4,7 +4,6 @@ resource "google_compute_instance" "default" {
   machine_type = var.machine_type
   zone         = var.zone
   project      = var.project
-
   tags = var.tags
 
   # resource_policies = var.scheduling_enabled ? [google_compute_resource_policy.schedule_vm[0].id] : []
@@ -56,8 +55,9 @@ resource "google_compute_instance" "default" {
   }
 
   lifecycle {
-    ignore_changes = [attached_disk]
+    ignore_changes = [attached_disk,labels,tags]
   }
+
 }
  
 resource "google_service_account" "default" {
@@ -74,6 +74,7 @@ resource "google_compute_address" "static" {
   address_type = var.address_type
   subnetwork   = var.subnetwork
   address      = var.address_type == "INTERNAL" ? (var.address == "" ? null : var.address) : null
+
 }
 
 # resource "google_compute_resource_policy" "schedule_vm" {
