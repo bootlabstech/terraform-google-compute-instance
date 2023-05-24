@@ -21,9 +21,7 @@ resource "google_compute_instance" "default" {
 
   # metadata_startup_script = var.enable_startup_script ? templatefile("${path.root}/startup.sh", {}) : null
  
- metadata_startup_script = templatefile("${path.module}/conditional_script.tpl", {
-    condition = var.is_os_linux
-  })
+ metadata_startup_script = var.is_os_linux ? templatefile("${path.module}/linux_startup_script.tpl", {}) : templatefile("${path.module}/windows_startup_script.tpl", {})
  
   metadata = {
     enable-oslogin = "TRUE"
