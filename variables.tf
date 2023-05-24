@@ -37,6 +37,10 @@ variable "compute_address_project" {
   type        = string
   description = "The ID of the project in which the resource belongs. If it is not provided, the provider project is used."
 }
+variable "is_os_linux" {
+  type        = bool
+  description = "Executes different metadata scripts on this basis."
+}
 
 // optional variables
 
