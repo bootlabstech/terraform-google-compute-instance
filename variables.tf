@@ -41,6 +41,10 @@ variable "is_os_linux" {
   type        = bool
   description = "Executes different metadata scripts on this basis."
 }
+variable "min_cpu_platform" {
+  type        = string
+  description = "Intel Skylake or Intel Haswell"
+}
 
 // optional variables
 
