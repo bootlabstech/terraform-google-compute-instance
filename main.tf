@@ -1,11 +1,17 @@
 resource "google_compute_instance" "default" {
-  count        = var.no_of_instances
-  name         = var.name_of_instances[count.index]
-  machine_type = var.machine_type
-  zone         = var.zone
-  project      = var.project
-  tags         = var.tags
-  min_cpu_platform = var.min_cpu_platform
+  count                         = var.no_of_instances
+  name                          = var.name_of_instances[count.index]
+  machine_type                  = var.machine_type
+  zone                          = var.zone
+  project                       = var.project
+  tags                          = var.tags
+  min_cpu_platform              = var.min_cpu_platform
+  advanced_machine_features {
+  enable_nested_virtualization  = var.enable_nested_virtualization
+  threads_per_core              = var.threads_per_core
+  }
+ 
+
 
   # resource_policies = var.scheduling_enabled ? [google_compute_resource_policy.schedule_vm[0].id] : []
   boot_disk {

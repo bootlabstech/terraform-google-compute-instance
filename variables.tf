@@ -45,6 +45,16 @@ variable "min_cpu_platform" {
   type        = string
   description = "Intel Skylake or Intel Haswell"
 }
+variable "enable_nested_virtualization" {
+  type        = bool
+  description = "enable_nested_virtualization"
+  default     = false
+}
+variable "threads_per_core" {
+  type        = number
+  description = "the number of threads per physical core. To disable simultaneous multithreading (SMT) set this to 1"
+  default     = 1
+}
 
 // optional variables
 
