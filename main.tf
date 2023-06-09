@@ -5,7 +5,7 @@ resource "google_compute_instance" "default" {
   zone                          = var.zone
   project                       = var.project
   tags                          = var.tags
-  min_cpu_platform              = var.min_cpu_platform
+  # min_cpu_platform              = var.min_cpu_platform
   advanced_machine_features {
   enable_nested_virtualization  = var.enable_nested_virtualization
   threads_per_core              = var.threads_per_core
@@ -28,11 +28,25 @@ resource "google_compute_instance" "default" {
 
   # metadata_startup_script = var.enable_startup_script ? templatefile("${path.root}/startup.sh", {}) : null
  
- metadata_startup_script = var.is_os_linux ? templatefile("${path.module}/linux_startup_script.tpl", {}) : templatefile("${path.module}/windows_startup_script.tpl", {})
+#  metadata_startup_script = var.is_os_linux ? templatefile("${path.module}/linux_startup_script.tpl", {}) : templatefile("${path.module}/windows_startup_script.tpl", {})
  
-  metadata = {
-    enable-oslogin = "TRUE"
-  }
+ metadata = {
+
+  enable-oslogin = "TRUE"
+
+
+
+
+  windows-startup-script-ps1 = var.is_os_linux ? null : templatefile("${path.module}/windows_startup_script.tpl", {})
+
+
+
+
+  # Exclude startup_script key when using the Windows startup script
+
+  startup-script = var.is_os_linux ? templatefile("${path.module}/linux_startup_script.tpl", {}) : null
+
+}
   network_interface {
     subnetwork = var.subnetwork
 
