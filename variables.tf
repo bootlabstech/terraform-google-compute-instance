@@ -96,7 +96,7 @@ variable "service_account_scopes" {
 variable "allow_stopping_for_update" {
   type        = bool
   description = "If true, allows Terraform to stop the instance to update its properties. If you try to update a property that requires stopping the instance without setting this field, the update will fail."
-  default     = false
+  default     = true
 }
 variable "kms_key_self_link" {
   type        = string
@@ -148,3 +148,13 @@ variable "address" {
 #   description = "The schedule vm is need to be true but the default is false"
 
 # }
+variable "gpu_type" {
+  description = ""
+  type = string
+  
+}
+variable "gpu_count" {
+  description = ""
+  type = number
+  
+}

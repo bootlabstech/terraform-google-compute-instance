@@ -5,15 +5,20 @@ resource "google_compute_instance" "default" {
   zone                          = var.zone
   project                       = var.project
   tags                          = var.tags
-  # min_cpu_platform              = var.min_cpu_platform
   advanced_machine_features {
   enable_nested_virtualization  = var.enable_nested_virtualization
   threads_per_core              = var.threads_per_core
   }
+  guest_accelerator  {
+    type   = var.gpu_type
+    count = var.gpu_count
+  }
+  scheduling {
+    automatic_restart     = false
+    on_host_maintenance   = "TERMINATE"
+  }
  
 
-
-  # resource_policies = var.scheduling_enabled ? [google_compute_resource_policy.schedule_vm[0].id] : []
   boot_disk {
     initialize_params {
       size  = var.boot_disk_size
@@ -25,38 +30,16 @@ resource "google_compute_instance" "default" {
 
   // Allow the instance to be stopped by terraform when updating configuration
   allow_stopping_for_update = var.allow_stopping_for_update
-
-  # metadata_startup_script = var.enable_startup_script ? templatefile("${path.root}/startup.sh", {}) : null
- 
-#  metadata_startup_script = var.is_os_linux ? templatefile("${path.module}/linux_startup_script.tpl", {}) : templatefile("${path.module}/windows_startup_script.tpl", {})
  
  metadata = {
-
   enable-oslogin = "TRUE"
-
-
-
-
   windows-startup-script-ps1 = var.is_os_linux ? null : templatefile("${path.module}/windows_startup_script.tpl", {})
 
-
-
-
   # Exclude startup_script key when using the Windows startup script
-
   startup-script = var.is_os_linux ? templatefile("${path.module}/linux_startup_script.tpl", {}) : null
-
 }
   network_interface {
     subnetwork = var.subnetwork
-
-    # dynamic "access_config" {
-    #   for_each = var.address_type == "EXTERNAL" ? [{}] : (var.address == "" ? [] : [{}])
-
-    #   content {
-    #     nat_ip = var.address_type == "EXTERNAL" ? google_compute_address.static[0].address : (var.address == "" ? null : google_compute_address.static[0].address)
-    #   }
-    # }
   }
 
   dynamic "service_account" {
@@ -97,22 +80,4 @@ resource "google_compute_address" "static" {
   address_type = var.address_type
   subnetwork   = var.subnetwork
   address      = var.address_type == "INTERNAL" ? (var.address == "" ? null : var.address) : null
-
 }
-
-# resource "google_compute_resource_policy" "schedule_vm" {
-#   count       = var.scheduling_enabled ? 1 : 0
-#   name        = var.resource_policy
-#   project     = var.project
-#   region      = var.compute_address_region
-#   description = var.description
-#   instance_schedule_policy {
-#     vm_start_schedule {
-#       schedule = var.vm-scheduled_start
-#     }
-#     vm_stop_schedule {
-#       schedule = var.vm-scheduled_stop
-#     }
-#     time_zone = var.time_zone
-#   }
-# }
