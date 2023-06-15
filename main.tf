@@ -9,16 +9,15 @@ resource "google_compute_instance" "default" {
   enable_nested_virtualization  = var.enable_nested_virtualization
   threads_per_core              = var.threads_per_core
   }
-  guest_accelerator  {
-    type   = var.gpu_type
-    count = var.gpu_count
-  }
+  # guest_accelerator  {
+  #   type   = var.gpu_type
+  #   count = var.gpu_count
+  # }
   scheduling {
     automatic_restart     = false
     on_host_maintenance   = "TERMINATE"
   }
  
-
   boot_disk {
     initialize_params {
       size  = var.boot_disk_size
@@ -27,6 +26,12 @@ resource "google_compute_instance" "default" {
     }
     kms_key_self_link = var.kms_key_self_link == "" ? null : var.kms_key_self_link
   }
+  # attached_disk {
+  #   source                  = var.additional_disk_needed ?  : null
+  #   device_name             = "addtnl-disk"
+  #   mode                    = "READ_WRITE"
+  #   kms_key_self_link       = var.kms_key_self_link
+  # }
 
   // Allow the instance to be stopped by terraform when updating configuration
   allow_stopping_for_update = var.allow_stopping_for_update
@@ -81,3 +86,18 @@ resource "google_compute_address" "static" {
   subnetwork   = var.subnetwork
   address      = var.address_type == "INTERNAL" ? (var.address == "" ? null : var.address) : null
 }
+# resource "google_compute_disk" "disk" {
+
+#   name                      = var.addtnl_disk_name
+#   type                      = var.addtnl_disk_type
+#   zone                      = var.zone
+#   image                     = var.addtnl_disk_image
+#   physical_block_size_bytes = var.physical_block_size_bytes
+#   size                      = var.addtnl_disk_size
+#   provisioned_iops          = var.addtnl_disk_provisioned_iops
+#   snapshot                  = var.addtnl_disk_snapshot
+#   project                   = var.project 
+#   disk_encryption_key{
+#   kms_key_self_link         = var.kms_key_self_link
+#   }
+# }
