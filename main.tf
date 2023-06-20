@@ -13,10 +13,10 @@ resource "google_compute_instance" "default" {
   #   type   = var.gpu_type
   #   count = var.gpu_count
   # }
-  scheduling {
-    automatic_restart     = false
-    on_host_maintenance   = "TERMINATE"
-  }
+  # scheduling {
+  #   automatic_restart     = false
+  #   on_host_maintenance   = "TERMINATE"
+  # }
  
   boot_disk {
     initialize_params {
