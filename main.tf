@@ -1,6 +1,6 @@
 resource "google_compute_instance" "default" {
-  count                         = var.no_of_instances
-  name                          = var.name_of_instances[count.index]
+  # count                         = var.no_of_instances
+  name                          = var.name_of_instances
   machine_type                  = var.machine_type
   zone                          = var.zone
   project                       = var.project

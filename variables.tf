@@ -1,11 +1,11 @@
 // required variables
 
-variable "no_of_instances" {
-  type        = number
-  description = "The number of instances to be created."
-}
+# variable "no_of_instances" {
+#   type        = number
+#   description = "The number of instances to be created."
+# }
 variable "name_of_instances" {
-  type        = list(string)
+  type        = string
   description = "The name of instances to be created."
 }
 variable "machine_type" {
