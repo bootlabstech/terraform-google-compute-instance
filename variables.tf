@@ -4,7 +4,7 @@
 #   type        = number
 #   description = "The number of instances to be created."
 # }
-variable "name_of_instances" {
+variable "name" {
   type        = string
   description = "The name of instances to be created."
 }
