@@ -7,7 +7,7 @@ md temp
 cd temp
 
 # Download the package
-Invoke-WebRequest -Uri https://artifacts.elastic.co/downloads/beats/elastic-agent/elastic-agent-8.8.1-windows-x86_64.zip
+Invoke-WebRequest -Uri https://artifacts.elastic.co/downloads/beats/elastic-agent/elastic-agent-8.8.1-windows-x86_64.zip -OutFile elastic-agent-8.8.1-windows-x86_64.zip
 
 # Restore the previous execution policy
 Set-ExecutionPolicy -ExecutionPolicy Restricted -Scope Process -Force
@@ -16,3 +16,4 @@ Set-ExecutionPolicy -ExecutionPolicy Restricted -Scope Process -Force
 Expand-Archive .\elastic-agent-8.8.1-windows-x86_64.zip -DestinationPath .
 cd elastic-agent-8.8.1-windows-x86_64
 .\elastic-agent.exe install --url=https://6d7f607d7dde4bebb494f4442612e81c.fleet.asia-south1.gcp.elastic-cloud.com:443 --enrollment-token=eGZmWEI0Y0JKa2lQcllRd2NNWFg6T1Z6SmRlX1VST0N0c1RNNEFEVWVXUQ== --force --tag gcp,windows
+
