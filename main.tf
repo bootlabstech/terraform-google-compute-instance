@@ -1,22 +1,16 @@
 resource "google_compute_instance" "default" {
-  # count                         = var.no_of_instances
-  name                          = var.name
+  count                         = var.no_of_instances
+  name                          = var.name_of_instances[count.index]
   machine_type                  = var.machine_type
   zone                          = var.zone
   project                       = var.project
   tags                          = var.tags
+  min_cpu_platform              = var.min_cpu_platform
   advanced_machine_features {
   enable_nested_virtualization  = var.enable_nested_virtualization
   threads_per_core              = var.threads_per_core
   }
-  # guest_accelerator  {
-  #   type   = var.gpu_type
-  #   count = var.gpu_count
-  # }
-  # scheduling {
-  #   automatic_restart     = false
-  #   on_host_maintenance   = "TERMINATE"
-  # }
+
  
   boot_disk {
     initialize_params {
@@ -26,12 +20,7 @@ resource "google_compute_instance" "default" {
     }
     kms_key_self_link = var.kms_key_self_link == "" ? null : var.kms_key_self_link
   }
-  # attached_disk {
-  #   source                  = var.additional_disk_needed ?  : null
-  #   device_name             = "addtnl-disk"
-  #   mode                    = "READ_WRITE"
-  #   kms_key_self_link       = var.kms_key_self_link
-  # }
+
 
   // Allow the instance to be stopped by terraform when updating configuration
   allow_stopping_for_update = var.allow_stopping_for_update
@@ -57,8 +46,8 @@ resource "google_compute_instance" "default" {
   }
 
   shielded_instance_config {
-    enable_secure_boot          = true
-    enable_integrity_monitoring = true
+    enable_secure_boot          = var.enable_secure_boot
+    enable_integrity_monitoring = var.enable_integrity_monitoring
   }
 
   timeouts {
@@ -86,18 +75,25 @@ resource "google_compute_address" "static" {
   subnetwork   = var.subnetwork
   address      = var.address_type == "INTERNAL" ? (var.address == "" ? null : var.address) : null
 }
-# resource "google_compute_disk" "disk" {
-
-#   name                      = var.addtnl_disk_name
-#   type                      = var.addtnl_disk_type
-#   zone                      = var.zone
-#   image                     = var.addtnl_disk_image
-#   physical_block_size_bytes = var.physical_block_size_bytes
-#   size                      = var.addtnl_disk_size
-#   provisioned_iops          = var.addtnl_disk_provisioned_iops
-#   snapshot                  = var.addtnl_disk_snapshot
-#   project                   = var.project 
-#   disk_encryption_key{
-#   kms_key_self_link         = var.kms_key_self_link
-#   }
-# }
+resource "google_compute_resource_policy" "daily" {
+  name   = "gcp-vm-backup-policy"
+  region = "asia-south1"
+  snapshot_schedule_policy {
+    schedule {
+    schedule {
+      daily_schedule {
+        days_in_cycle = 1
+        start_time    = "01:00"
+      }
+    }
+    retention_policy {
+      max_retention_days    = 7
+      on_source_disk_delete = "KEEP_AUTO_SNAPSHOTS"
+    }
+    snapshot_properties {
+      storage_locations = ["asia"]
+      guest_flush       = true
+      chain_name = "vm-schedule-chain"
+    }
+  }
+}
