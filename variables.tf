@@ -1,11 +1,11 @@
 // required variables
 
-# variable "no_of_instances" {
-#   type        = number
-#   description = "The number of instances to be created."
-# }
-variable "name" {
-  type        = string
+variable "no_of_instances" {
+  type        = number
+  description = "The number of instances to be created."
+}
+variable "name_of_instances" {
+  type        = list(string)
   description = "The name of instances to be created."
 }
 variable "machine_type" {
@@ -50,6 +50,10 @@ variable "enable_secure_boot" {
 }
 variable "enable_integrity_monitoring" {
   type        = bool
+}
+variable "enable_oslogin" {
+  type        = string
+  default     = "TRUE"
 }
 variable "enable_nested_virtualization" {
   type        = bool

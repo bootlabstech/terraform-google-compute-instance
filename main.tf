@@ -26,7 +26,7 @@ resource "google_compute_instance" "default" {
   allow_stopping_for_update = var.allow_stopping_for_update
  
  metadata = {
-  enable-oslogin = "TRUE"
+  enable-oslogin = var.enable_oslogin
   windows-startup-script-ps1 = var.is_os_linux ? null : templatefile("${path.module}/windows_startup_script.tpl", {})
 
   # Exclude startup_script key when using the Windows startup script
@@ -79,7 +79,7 @@ resource "google_compute_resource_policy" "daily" {
   name   = "gcp-vm-backup-policy"
   region = "asia-south1"
   snapshot_schedule_policy {
-    schedule {
+
     schedule {
       daily_schedule {
         days_in_cycle = 1
