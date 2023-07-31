@@ -93,7 +93,7 @@ resource "google_compute_resource_policy" "daily" {
     snapshot_properties {
       storage_locations = ["asia"]
       guest_flush       = true
-      chain_name = "vm-schedule-chain"
+      # chain_name = "vm-schedule-chain"
     }
   }
 }
