@@ -76,6 +76,7 @@ resource "google_compute_address" "static" {
   address      = var.address_type == "INTERNAL" ? (var.address == "" ? null : var.address) : null
 }
 resource "google_compute_resource_policy" "daily" {
+  project = var.project
   name   = "gcp-vm-backup-policy"
   region = "asia-south1"
   snapshot_schedule_policy {
