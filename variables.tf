@@ -1,9 +1,9 @@
 // required variables
 
-# variable "no_of_instances" {
-#   type        = number
-#   description = "The number of instances to be created."
-# }
+variable "no_of_instances" {
+  type        = number
+  description = "The number of instances to be created."
+}
 variable "name" {
   type        = string
   description = "The name of instances to be created."
@@ -58,7 +58,7 @@ variable "threads_per_core" {
 
 // optional variables
 
-variable "project" {
+variable "project_id" {
   type        = string
   description = "The ID of the project in which the resource belongs. If it is not provided, the provider project is used."
 }
@@ -66,7 +66,6 @@ variable "project" {
 variable "tags" {
   type        = list(string)
   description = "A list of network tags to attach to the instance."
-  default     = []
 }
 
 variable "network" {
@@ -101,7 +100,6 @@ variable "allow_stopping_for_update" {
 variable "kms_key_self_link" {
   type        = string
   description = "The self_link of the encryption key that is stored in Google Cloud KMS to encrypt this disk."
-  default     = ""
 }
 variable "additional_disk_needed" {
   type        = bool
@@ -117,6 +115,12 @@ variable "address" {
   description = "The private ip of the compute-instance"
   default      = ""
 }
+variable "service_account_email" {
+  type        = string
+}
+
+
+
 # schedule-instance-start-stop
 # variable "resource_policy" {
 #   type        = string
@@ -153,13 +157,13 @@ variable "address" {
 #   description = "The schedule vm is need to be true but the default is false"
 
 # }
-# variable "gpu_type" {
-#   description = ""
-#   type = string
+variable "gpu_type" {
+  description = ""
+  type = string
   
-# }
-# variable "gpu_count" {
-#   description = ""
-#   type = number
+}
+variable "gpu_count" {
+  description = ""
+  type = number
   
-# }
+}
