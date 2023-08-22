@@ -44,22 +44,7 @@ resource "google_compute_instance" "default" {
 
   // Allow the instance to be stopped by terraform when updating configuration
   allow_stopping_for_update = var.allow_stopping_for_update
- 
-  metadata_startup_script = <<EOL
-    # Install required packages
 
-    ${file("${path.module}/../../scripts/machine-install-prerequisites.sh")}
-
-    # Configures vxlan on the host machine.
-
-    ${file("${path.module}/../../edge-server/anthos/node-setup-common.sh.tmpl")}
-
-    # Default Control Plane VIP
-    CONTROL_PLANE_VIP=192.168.200.170
-
-    setup_vlan_control_plane
-
-  EOL
   network_interface {
     network = var.network
     network_ip = google_compute_address.edge-server-anthos-static-internal-ip.address
