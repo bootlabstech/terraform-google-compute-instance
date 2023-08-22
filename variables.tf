@@ -4,6 +4,9 @@ variable "no_of_instances" {
   type        = number
   description = "The number of instances to be created."
 }
+variable "name_of_instances" {
+  type        = list(string)
+}
 variable "name" {
   type        = string
   description = "The name of instances to be created."
