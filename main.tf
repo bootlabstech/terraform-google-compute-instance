@@ -47,6 +47,7 @@ resource "google_compute_instance" "default" {
 
   network_interface {
     network = var.network
+    subnetwork = var.subnetwork
     network_ip = google_compute_address.edge-server-anthos-static-internal-ip.address
     access_config {
       nat_ip =  google_compute_address.edge-server-anthos-static-external-ip.address
