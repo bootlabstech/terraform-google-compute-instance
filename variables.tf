@@ -118,7 +118,9 @@ variable "address" {
 variable "service_account_email" {
   type        = string
 }
-
+variable "region" {
+  type        = string
+}
 
 
 # schedule-instance-start-stop
