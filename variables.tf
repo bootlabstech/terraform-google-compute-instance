@@ -7,10 +7,6 @@ variable "no_of_instances" {
 variable "name_of_instances" {
   type        = list(string)
 }
-variable "name" {
-  type        = string
-  description = "The name of instances to be created."
-}
 variable "machine_type" {
   type        = string
   description = "The type of machine to be created."
