@@ -74,6 +74,6 @@ resource "google_compute_instance" "default" {
 
   lifecycle {
     ignore_changes = [attached_disk,labels,tags]
+    prevent_destroy = true
   }
-
 }
