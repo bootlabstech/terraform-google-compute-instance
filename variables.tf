@@ -4,8 +4,8 @@ variable "no_of_instances" {
   type        = number
   description = "The number of instances to be created."
 }
-variable "name_of_instances" {
-  type        = list(string)
+variable "instance_name" {
+  type = string
 }
 variable "machine_type" {
   type        = string
@@ -22,6 +22,18 @@ variable "boot_disk_size" {
 variable "boot_disk_type" {
   type        = string
   description = "The boot_disk_type of the VM."
+}
+variable "disk_size" {
+  type        = number
+  description = "The additional_disk_size of the VM."
+}
+variable "disk_type" {
+  type        = string
+  description = "The additional_disk_type of the VM."
+}
+variable "disk_name" {
+  type        = string
+  description = "The name of additional_disk of the VM."
 }
 variable "boot_disk_image" {
   type        = string
@@ -67,11 +79,6 @@ variable "tags" {
   description = "A list of network tags to attach to the instance."
 }
 
-variable "network" {
-  type        = string
-  description = " The name or self_link of the network to attach this interface to. Either network or subnetwork must be provided. If network isn't provided it will be inferred from the subnetwork."
-}
-
 variable "subnetwork" {
   type        = string
   description = "The name or self_link of the subnetwork to attach this interface to. Either network or subnetwork must be provided."
@@ -112,59 +119,21 @@ variable "address_type" {
 variable "address" {
   type        = string
   description = "The private ip of the compute-instance"
-  default      = ""
+  default     = ""
 }
 variable "service_account_email" {
-  type        = string
+  type = string
 }
 variable "region" {
-  type        = string
-}
-
-
-# schedule-instance-start-stop
-# variable "resource_policy" {
-#   type        = string
-#   description = " The name of sceduled policy should be created"
-# }
-
-# variable "description" {
-#   type        = string
-#   description = "The name of start and stop"
-# }
-
-# variable "time_zone" {
-#   type        = string
-#   description = "the time zone to be used in interpreting the schedule"
-# }
-
-# variable "vm-scheduled_start" {
-#   type        = string
-#   description = "The schedule for starting instances."
-# }
-
-# variable "vm-scheduled_stop" {
-#   type        = string
-#   description = "the schedule for stopping instances"
-# }
-
-# variable "scheduling_enabled" {
-#   type        = bool
-#   description = "The schedule vm is need to be true but the default is false"
-#   default     = false
-# }
-# variable "additional_disk_name" {
-#   type        = string
-#   description = "The schedule vm is need to be true but the default is false"
-
-# }
-variable "gpu_type" {
-  description = ""
   type = string
-  
 }
-variable "gpu_count" {
-  description = ""
-  type = number
-  
-}
+# variable "gpu_type" {
+#   description = ""
+#   type        = string
+
+# }
+# variable "gpu_count" {
+#   description = ""
+#   type        = number
+
+# }
