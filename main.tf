@@ -100,7 +100,7 @@ resource "google_compute_resource_policy" "policy" {
       }
       storage_locations = ["asia"]
       guest_flush       = true
-      chain_name        = "test-schedule-chain-name"
+      # chain_name        = "test-schedule-chain-name"
     }
   }
 }
