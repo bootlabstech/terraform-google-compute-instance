@@ -17,13 +17,21 @@ resource "google_compute_instance" "default" {
   // Allow the instance to be stopped by terraform when updating configuration
   allow_stopping_for_update = var.allow_stopping_for_update
  
- metadata = {
-  enable-oslogin = var.enable_oslogin
-  windows-startup-script-ps1 = var.is_os_linux ? null : templatefile("${path.module}/windows_startup_script.tpl", {})
+#  metadata = {
+#   enable-oslogin = var.enable_oslogin
+#   windows-startup-script-ps1 = var.is_os_linux ? null : templatefile("${path.module}/windows_startup_script.tpl", {})
+
+#   # Exclude startup_script key when using the Windows startup script
+#   startup-script = var.is_os_linux ? templatefile("${path.module}/linux_startup_script.tpl", {}) : null
+# }
+  metadata = {
+   enable-oslogin             = var.enable_oslogin
+   windows-startup-script-ps1 = var.is_os_linux ? null : templatefile("${path.module}/windows_startup_script.tpl", {})
 
   # Exclude startup_script key when using the Windows startup script
-  startup-script = var.is_os_linux ? templatefile("${path.module}/linux_startup_script.tpl", {}) : null
+   startup-script             = var.is_os_linux ? templatefile("${path.module}/linux_startup_script.tpl", {}) : null
 }
+
   network_interface {
     subnetwork = var.subnetwork
     network_ip  = var.address == "" ? null : var.address
