@@ -7,12 +7,4 @@ tar xzvf elastic-agent-8.8.1-linux-x86_64.tar.gz
 cd elastic-agent-8.8.1-linux-x86_64
 sudo ./elastic-agent install --url=https://6d7f607d7dde4bebb494f4442612e81c.fleet.asia-south1.gcp.elastic-cloud.com:443 --enrollment-token=eGZmWEI0Y0JKa2lQcllRd2NNWFg6T1Z6SmRlX1VST0N0c1RNNEFEVWVXUQ== --force --tag gcp,linux
 rm -rf elasticagent1
-# # Install required packages
-# ${file("${path.module}/../../scripts/machine-install-prerequisites.sh")}
-# # Configures vxlan on the host machine.
-# ${file("${path.module}/../../edge-server/anthos/node-setup-common.sh.tmpl")}
-# # Default Control Plane VIP
-# CONTROL_PLANE_VIP=192.168.200.170
-# setup_vlan_control_plane
 EOF
-
