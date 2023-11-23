@@ -13,7 +13,7 @@ resource "google_compute_instance" "default" {
 
  
   boot_disk {
-    source = google_compute_disk.boot_disk[count.index].id
+    source = google_compute_disk.boot_disk.id
     kms_key_self_link = var.kms_key_self_link == "" ? null : var.kms_key_self_link
   }
 
