@@ -5,7 +5,6 @@ resource "google_compute_instance" "default" {
   zone                          = var.zone
   project                       = var.project_id
   tags                          = var.tags
-  min_cpu_platform              = var.min_cpu_platform
   advanced_machine_features {
   enable_nested_virtualization  = var.enable_nested_virtualization
   threads_per_core              = var.threads_per_core
