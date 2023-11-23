@@ -10,14 +10,10 @@ resource "google_compute_instance" "default" {
   enable_nested_virtualization  = var.enable_nested_virtualization
   threads_per_core              = var.threads_per_core
   }
-
- 
   boot_disk {
     source = google_compute_disk.boot_disk.id
     kms_key_self_link = var.kms_key_self_link == "" ? null : var.kms_key_self_link
   }
-
-
   // Allow the instance to be stopped by terraform when updating configuration
   allow_stopping_for_update = var.allow_stopping_for_update
  
