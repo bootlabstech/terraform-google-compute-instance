@@ -47,9 +47,11 @@ variable "min_cpu_platform" {
 }
 variable "enable_secure_boot" {
   type        = bool
+  default     = true
 }
 variable "enable_integrity_monitoring" {
   type        = bool
+  default     = true
 }
 variable "enable_oslogin" {
   type        = string
@@ -68,7 +70,7 @@ variable "threads_per_core" {
 
 // optional variables
 
-variable "project" {
+variable "project_id" {
   type        = string
   description = "The ID of the project in which the resource belongs. If it is not provided, the provider project is used."
 }
@@ -127,53 +129,7 @@ variable "address" {
   description = "The private ip of the compute-instance"
   default      = ""
 }
-variable "polociy_name" {
+variable "policy_name" {
   type =  string
   description = "the policy  name for snapshot scheduler"
 }
-# schedule-instance-start-stop
-# variable "resource_policy" {
-#   type        = string
-#   description = " The name of sceduled policy should be created"
-# }
-
-# variable "description" {
-#   type        = string
-#   description = "The name of start and stop"
-# }
-
-# variable "time_zone" {
-#   type        = string
-#   description = "the time zone to be used in interpreting the schedule"
-# }
-
-# variable "vm-scheduled_start" {
-#   type        = string
-#   description = "The schedule for starting instances."
-# }
-
-# variable "vm-scheduled_stop" {
-#   type        = string
-#   description = "the schedule for stopping instances"
-# }
-
-# variable "scheduling_enabled" {
-#   type        = bool
-#   description = "The schedule vm is need to be true but the default is false"
-#   default     = false
-# }
-# variable "additional_disk_name" {
-#   type        = string
-#   description = "The schedule vm is need to be true but the default is false"
-
-# }
-# variable "gpu_type" {
-#   description = ""
-#   type = string
-  
-# }
-# variable "gpu_count" {
-#   description = ""
-#   type = number
-  
-# }

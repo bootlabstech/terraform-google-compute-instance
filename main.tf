@@ -3,7 +3,7 @@ resource "google_compute_instance" "default" {
   name                          = var.name_of_instance
   machine_type                  = var.machine_type
   zone                          = var.zone
-  project                       = var.project
+  project                       = var.project_id
   tags                          = var.tags
   min_cpu_platform              = var.min_cpu_platform
   advanced_machine_features {
@@ -60,7 +60,7 @@ resource "google_compute_instance" "default" {
 resource "google_service_account" "default" {
   count        = var.create_service_account ? 1 : 0
   account_id   = "service-account-id"
-  project      = var.project
+  project      = var.project_id
 }
 
 resource "google_compute_address" "static" {
@@ -73,9 +73,9 @@ resource "google_compute_address" "static" {
   address      = var.address_type == "INTERNAL" ? (var.address == "" ? null : var.address) : null
 }
 resource "google_compute_disk" "boot_disk" {
-  count     = var.no_of_instances
+  # count     = var.no_of_instances
   project   = var.project_id
-  name      = "${var.instance_name}-${count.index + 1}" 
+  name      = var.name_of_instance
   size      = var.boot_disk_size
   type      = var.boot_disk_type
   image     = var.boot_disk_image
@@ -83,15 +83,15 @@ resource "google_compute_disk" "boot_disk" {
 }
 resource "google_compute_disk" "additional_disk" {
   project   = var.project_id
-  count     = var.additional_disk_needed ? var.no_of_instances : 0
-  name      = "${var.disk_name}-${count.index + 1}" 
+  # count     = var.additional_disk_needed ? var.no_of_instances : 0
+  name      = "${var.name_of_instance}-addtnl" 
   size      = var.disk_size
   type      = var.disk_type
   zone      = var.zone
 }
 resource "google_compute_resource_policy" "daily" {
-  project = var.project
-  name   = var.polociy_name
+  project = var.project_id
+  name   = var.policy_name
   region = "asia-south1"
   snapshot_schedule_policy {
 
@@ -108,7 +108,6 @@ resource "google_compute_resource_policy" "daily" {
     snapshot_properties {
       storage_locations = ["asia"]
       guest_flush       = true
-      # chain_name = "vm-schedule-chain"
     }
   }
 }
