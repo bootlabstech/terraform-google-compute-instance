@@ -13,11 +13,7 @@ resource "google_compute_instance" "default" {
 
  
   boot_disk {
-    initialize_params {
-      size  = var.boot_disk_size
-      type  = var.boot_disk_type
-      image = var.boot_disk_image
-    }
+    source = google_compute_disk.boot_disk[count.index].id
     kms_key_self_link = var.kms_key_self_link == "" ? null : var.kms_key_self_link
   }
 
@@ -34,6 +30,7 @@ resource "google_compute_instance" "default" {
 }
   network_interface {
     subnetwork = var.subnetwork
+    network_ip  = var.address == "" ? null : var.address
   }
 
   dynamic "service_account" {
@@ -74,6 +71,23 @@ resource "google_compute_address" "static" {
   address_type = var.address_type
   subnetwork   = var.subnetwork
   address      = var.address_type == "INTERNAL" ? (var.address == "" ? null : var.address) : null
+}
+resource "google_compute_disk" "boot_disk" {
+  count     = var.no_of_instances
+  project   = var.project_id
+  name      = "${var.instance_name}-${count.index + 1}" 
+  size      = var.boot_disk_size
+  type      = var.boot_disk_type
+  image     = var.boot_disk_image
+  zone      = var.zone
+}
+resource "google_compute_disk" "additional_disk" {
+  project   = var.project_id
+  count     = var.additional_disk_needed ? var.no_of_instances : 0
+  name      = "${var.disk_name}-${count.index + 1}" 
+  size      = var.disk_size
+  type      = var.disk_type
+  zone      = var.zone
 }
 resource "google_compute_resource_policy" "daily" {
   project = var.project
