@@ -20,18 +20,12 @@ variable "boot_disk_size" {
   type        = number
   description = "The boot_disk_size of the VM."
 }
-variable "disk_size" {
-  type        = number
-  description = "The addtnl_disk_size of the VM."
-}
+
 variable "boot_disk_type" {
   type        = string
   description = "The boot_disk_type of the VM."
 }
-variable "disk_type" {
-  type        = string
-  description = "The additional_disk_type of the VM."
-}
+
 variable "boot_disk_image" {
   type        = string
   description = "The boot_disk_image of the VM."
@@ -137,4 +131,12 @@ variable "address" {
 variable "policy_name" {
   type =  string
   description = "the policy  name for snapshot scheduler"
+}
+variable "disk_type" {
+  type        = string
+  description = "The additional_disk_type of the VM."
+}
+variable "disk_size" {
+  type        = number
+  description = "The addtnl_disk_size of the VM."
 }

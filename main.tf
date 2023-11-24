@@ -13,6 +13,7 @@ resource "google_compute_instance" "default" {
     source = google_compute_disk.boot_disk.id
     kms_key_self_link = var.kms_key_self_link == "" ? null : var.kms_key_self_link
   }
+
   // Allow the instance to be stopped by terraform when updating configuration
   allow_stopping_for_update = var.allow_stopping_for_update
  
@@ -38,6 +39,7 @@ resource "google_compute_instance" "default" {
     }
   }
 
+
   shielded_instance_config {
     enable_secure_boot          = var.enable_secure_boot
     enable_integrity_monitoring = var.enable_integrity_monitoring
@@ -51,12 +53,6 @@ resource "google_compute_instance" "default" {
     ignore_changes = [attached_disk,labels,tags]
   }
 
-}
- 
-resource "google_service_account" "default" {
-  count        = var.create_service_account ? 1 : 0
-  account_id   = "service-account-id"
-  project      = var.project_id
 }
 
 resource "google_compute_address" "static" {
@@ -79,7 +75,7 @@ resource "google_compute_disk" "boot_disk" {
 }
 resource "google_compute_disk" "additional_disk" {
   project   = var.project_id
-  # count     = var.additional_disk_needed ? var.no_of_instances : 0
+  count     = var.additional_disk_needed ? 1 : 0
   name      = "${var.name_of_instance}-addtnl" 
   size      = var.disk_size
   type      = var.disk_type
