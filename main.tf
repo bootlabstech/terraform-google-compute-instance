@@ -62,7 +62,7 @@ resource "google_service_account" "default" {
 resource "google_compute_address" "static" {
   count        = var.address_type == "INTERNAL" ? (var.address == "" ? 0 : 1) : 1
   name         = "${var.name_of_instance}-staticip" 
-  project      = var.compute_address_project
+  project      = var.project_id
   region       = var.compute_address_region
   address_type = var.address_type
   subnetwork   = var.subnetwork
