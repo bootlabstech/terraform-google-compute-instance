@@ -77,11 +77,6 @@ variable "tags" {
   description = "A list of network tags to attach to the instance."
 }
 
-variable "network" {
-  type        = string
-  description = " The name or self_link of the network to attach this interface to. Either network or subnetwork must be provided. If network isn't provided it will be inferred from the subnetwork."
-}
-
 variable "subnetwork" {
   type        = string
   description = "The name or self_link of the subnetwork to attach this interface to. Either network or subnetwork must be provided."
