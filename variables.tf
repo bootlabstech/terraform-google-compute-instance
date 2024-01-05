@@ -59,12 +59,10 @@ variable "enable_oslogin" {
 variable "enable_nested_virtualization" {
   type        = bool
   description = "enable_nested_virtualization"
-  default     = false
 }
 variable "threads_per_core" {
   type        = number
   description = "the number of threads per physical core. To disable simultaneous multithreading (SMT) set this to 1"
-  default     = 1
 }
 
 // optional variables
@@ -77,7 +75,6 @@ variable "project_id" {
 variable "tags" {
   type        = list(string)
   description = "A list of network tags to attach to the instance."
-  default     = []
 }
 
 variable "network" {
@@ -92,7 +89,6 @@ variable "subnetwork" {
 variable "enable_startup_script" {
   type        = bool
   description = "Enable startup script, include startup.sh"
-  default     = false
 }
 variable "create_service_account" {
   type        = bool
@@ -112,7 +108,6 @@ variable "allow_stopping_for_update" {
 variable "kms_key_self_link" {
   type        = string
   description = "The self_link of the encryption key that is stored in Google Cloud KMS to encrypt this disk."
-  default     = ""
 }
 variable "additional_disk_needed" {
   type        = bool
