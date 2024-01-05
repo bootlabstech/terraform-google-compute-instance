@@ -50,7 +50,7 @@ resource "google_compute_instance" "default" {
   }
 
   lifecycle {
-    ignore_changes = [attached_disk, labels, tags]
+    ignore_changes = [boot_disk,attached_disk, labels, tags]
   }
 
 }
@@ -72,6 +72,9 @@ resource "google_compute_disk" "boot_disk" {
   type    = var.boot_disk_type
   image   = var.boot_disk_image
   zone    = var.zone
+    disk_encryption_key {
+    kms_key_self_link = var.kms_key_self_link
+  }
 }
 resource "google_compute_disk" "additional_disk" {
   project = var.project_id
@@ -80,7 +83,20 @@ resource "google_compute_disk" "additional_disk" {
   size    = var.disk_size
   type    = var.disk_type
   zone    = var.zone
+      disk_encryption_key {
+    kms_key_self_link = var.kms_key_self_link
+  }
 }
+resource "google_compute_attached_disk" "attachvmtoaddtnl" {
+  count   = var.additional_disk_needed ? var.no_of_instances : 0
+  disk     = google_compute_disk.additional_disk[count.index].id
+  instance = "${var.name_of_instance}-${count.index}"
+  project  = var.project_id
+  zone     = var.zone
+  depends_on = [
+    google_compute_disk.additional_disk
+  ]
+}     
 resource "google_compute_resource_policy" "daily" {
   project = var.project_id
   name    = var.policy_name
