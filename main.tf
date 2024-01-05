@@ -1,33 +1,33 @@
 resource "google_compute_instance" "default" {
-  # count                         = var.no_of_instances
-  name                          = var.name_of_instance
-  machine_type                  = var.machine_type
-  zone                          = var.zone
-  project                       = var.project_id
-  tags                          = var.tags
+  count        = var.no_of_instances
+  name         = "${var.name_of_instance}-${count.index}"
+  machine_type = var.machine_type
+  zone         = var.zone
+  project      = var.project_id
+  tags         = var.tags
   advanced_machine_features {
-  enable_nested_virtualization  = var.enable_nested_virtualization
-  threads_per_core              = var.threads_per_core
+    enable_nested_virtualization = var.enable_nested_virtualization
+    threads_per_core             = var.threads_per_core
   }
   boot_disk {
-    source = google_compute_disk.boot_disk.id
+    source            = google_compute_disk.boot_disk[count.index].id
     kms_key_self_link = var.kms_key_self_link == "" ? null : var.kms_key_self_link
   }
 
   // Allow the instance to be stopped by terraform when updating configuration
   allow_stopping_for_update = var.allow_stopping_for_update
- 
-  metadata = {
-   enable-oslogin             = var.enable_oslogin
-   windows-startup-script-ps1 = var.is_os_linux ? null : templatefile("${path.module}/windows_startup_script.tpl", {})
 
-  # Exclude startup_script key when using the Windows startup script
-   startup-script             = var.is_os_linux ? templatefile("${path.module}/linux_startup_script.tpl", {}) : null
-}
+  metadata = {
+    enable-oslogin             = var.enable_oslogin
+    windows-startup-script-ps1 = var.is_os_linux ? null : templatefile("${path.module}/windows_startup_script.tpl", {})
+
+    # Exclude startup_script key when using the Windows startup script
+    startup-script = var.is_os_linux ? templatefile("${path.module}/linux_startup_script.tpl", {}) : null
+  }
 
   network_interface {
     subnetwork = var.subnetwork
-    network_ip  = var.address == "" ? null : var.address
+    network_ip = var.address == "" ? null : var.address
   }
 
   dynamic "service_account" {
@@ -50,14 +50,14 @@ resource "google_compute_instance" "default" {
   }
 
   lifecycle {
-    ignore_changes = [attached_disk,labels,tags]
+    ignore_changes = [attached_disk, labels, tags]
   }
 
 }
 
 resource "google_compute_address" "static" {
   count        = var.address_type == "INTERNAL" ? (var.address == "" ? 0 : 1) : 1
-  name         = "${var.name_of_instance}-staticip" 
+  name         = "${var.name_of_instance}-staticip"
   project      = var.project_id
   region       = var.compute_address_region
   address_type = var.address_type
@@ -65,26 +65,26 @@ resource "google_compute_address" "static" {
   address      = var.address_type == "INTERNAL" ? (var.address == "" ? null : var.address) : null
 }
 resource "google_compute_disk" "boot_disk" {
-  # count     = var.no_of_instances
-  project   = var.project_id
-  name      = var.name_of_instance
-  size      = var.boot_disk_size
-  type      = var.boot_disk_type
-  image     = var.boot_disk_image
-  zone      = var.zone
+  count   = var.no_of_instances
+  project = var.project_id
+  name    = "${var.name_of_instance}-${count.index}"
+  size    = var.boot_disk_size
+  type    = var.boot_disk_type
+  image   = var.boot_disk_image
+  zone    = var.zone
 }
 resource "google_compute_disk" "additional_disk" {
-  project   = var.project_id
-  count     = var.additional_disk_needed ? 1 : 0
-  name      = "${var.name_of_instance}-addtnl" 
-  size      = var.disk_size
-  type      = var.disk_type
-  zone      = var.zone
+  project = var.project_id
+  count   = var.additional_disk_needed ? var.no_of_instances : 0
+  name    = "${var.name_of_instance}-${count.index}-addtnl"
+  size    = var.disk_size
+  type    = var.disk_type
+  zone    = var.zone
 }
 resource "google_compute_resource_policy" "daily" {
   project = var.project_id
-  name   = var.policy_name
-  region = "asia-south1"
+  name    = var.policy_name
+  region  = "asia-south1"
   snapshot_schedule_policy {
 
     schedule {

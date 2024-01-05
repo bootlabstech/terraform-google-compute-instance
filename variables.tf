@@ -1,9 +1,9 @@
 // required variables
 
-# variable "no_of_instances" {
-#   type        = number
-#   description = "The number of instances to be created."
-# }
+variable "no_of_instances" {
+  type        = number
+  description = "The number of instances to be created."
+}
 variable "name_of_instance" {
   type        = string
   description = "The name of instances to be created."
@@ -45,16 +45,16 @@ variable "is_os_linux" {
 }
 
 variable "enable_secure_boot" {
-  type        = bool
-  default     = true
+  type    = bool
+  default = true
 }
 variable "enable_integrity_monitoring" {
-  type        = bool
-  default     = true
+  type    = bool
+  default = true
 }
 variable "enable_oslogin" {
-  type        = string
-  default     = "TRUE"
+  type    = string
+  default = "TRUE"
 }
 variable "enable_nested_virtualization" {
   type        = bool
@@ -126,10 +126,10 @@ variable "address_type" {
 variable "address" {
   type        = string
   description = "The private ip of the compute-instance"
-  default      = ""
+  default     = ""
 }
 variable "policy_name" {
-  type =  string
+  type        = string
   description = "the policy  name for snapshot scheduler"
 }
 variable "disk_type" {
