@@ -75,6 +75,7 @@ resource "google_compute_disk" "boot_disk" {
     disk_encryption_key {
     kms_key_self_link = var.kms_key_self_link
   }
+  depends_on = [ google_project_iam_binding.network_binding2 ]
 }
 resource "google_compute_disk" "additional_disk" {
   project = var.project_id
@@ -118,4 +119,16 @@ resource "google_compute_resource_policy" "daily" {
       guest_flush       = true
     }
   }
+}
+data "google_project" "service_project" {
+  project_id = var.project_id
+}
+resource "google_project_iam_binding" "network_binding2" {
+  count   = 1
+  project =var.project_id
+  role    = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
+  members = [
+    "serviceAccount:service-${data.google_project.service_project.number}@compute-system.iam.gserviceaccount.com",
+    
+  ]
 }
