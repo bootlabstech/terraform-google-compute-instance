@@ -1,6 +1,7 @@
+
 resource "google_compute_instance" "default" {
   count        = var.no_of_instances
-  name         = "${var.name_of_instance}-${count.index}"
+  name         = var.no_of_instances > 1 ? "${var.name_of_instance}-${count.index}" : var.name_of_instance
   machine_type = var.machine_type
   zone         = var.zone
   project      = var.project_id
