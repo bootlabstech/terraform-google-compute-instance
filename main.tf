@@ -58,7 +58,7 @@ resource "google_compute_instance" "default" {
 
 resource "google_compute_address" "static" {
   count        = var.address_type == "INTERNAL" ? (var.address == "" ? 0 : 1) : 1
-  name         = "${var.name_of_instance}-staticip"
+  name         = var.no_of_instances > 1 ? "${var.name_of_instance}-${count.index}-staticip" : "${var.name_of_instance}--staticip"
   project      = var.project_id
   region       = var.compute_address_region
   address_type = var.address_type
@@ -68,7 +68,7 @@ resource "google_compute_address" "static" {
 resource "google_compute_disk" "boot_disk" {
   count   = var.no_of_instances
   project = var.project_id
-  name    = "${var.name_of_instance}-${count.index}"
+  name    = var.no_of_instances > 1 ? "${var.name_of_instance}-${count.index}" : var.name_of_instance
   size    = var.boot_disk_size
   type    = var.boot_disk_type
   image   = var.boot_disk_image
@@ -81,7 +81,7 @@ resource "google_compute_disk" "boot_disk" {
 resource "google_compute_disk" "additional_disk" {
   project = var.project_id
   count   = var.additional_disk_needed ? var.no_of_instances : 0
-  name    = "${var.name_of_instance}-${count.index}-addtnl"
+  name    = var.no_of_instances > 1 ? "${var.name_of_instance}-${count.index}-addtnl" : "${var.name_of_instance}-addtnl"
   size    = var.disk_size
   type    = var.disk_type
   zone    = var.zone
@@ -92,7 +92,7 @@ resource "google_compute_disk" "additional_disk" {
 resource "google_compute_attached_disk" "attachvmtoaddtnl" {
   count   = var.additional_disk_needed ? var.no_of_instances : 0
   disk     = google_compute_disk.additional_disk[count.index].id
-  instance = "${var.name_of_instance}-${count.index}"
+  instance = var.no_of_instances > 1 ? "${var.name_of_instance}-${count.index}" : var.name_of_instance
   project  = var.project_id
   zone     = var.zone
   depends_on = [
