@@ -53,6 +53,13 @@ resource "google_compute_instance" "default" {
   lifecycle {
     ignore_changes = [boot_disk,attached_disk, labels, tags]
   }
+  service_account {
+    email = "${data.google_project.service_project.number}-compute@developer.gserviceaccount.com"
+    scopes = [
+       "https://www.googleapis.com/auth/cloud-platform",
+    ]
+    
+  }
 
 }
 
