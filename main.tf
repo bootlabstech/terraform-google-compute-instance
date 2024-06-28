@@ -75,7 +75,7 @@ resource "google_compute_address" "static" {
 resource "google_compute_disk" "boot_disk" {
   count   = var.no_of_instances
   project = var.project_id
-  name    = var.no_of_instances > 1 ? "${var.name_of_instance}-${count.index}" : var.name_of_instance
+  name    = var.no_of_instances > 1 ? "${var.name_of_instance}-${count.index}-maindisk" : "${var.name_of_instance}-maindisk"
   size    = var.boot_disk_size
   type    = var.boot_disk_type
   image   = var.boot_disk_image
