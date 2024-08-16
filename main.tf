@@ -103,7 +103,7 @@ resource "google_compute_attached_disk" "attachvmtoaddtnl" {
   project  = var.project_id
   zone     = var.zone
   depends_on = [
-    google_compute_disk.additional_disk
+    google_compute_disk.additional_disk,google_compute_instance.default
   ]
 }     
 resource "google_compute_resource_policy" "daily" {
