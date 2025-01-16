@@ -41,20 +41,10 @@ variable "is_os_linux" {
   type        = bool
   description = "Executes different metadata scripts on this basis."
 }
-variable "min_cpu_platform" {
-  type        = string
-  description = "Intel Skylake or Intel Haswell"
-}
-variable "enable_secure_boot" {
-  type        = bool
-}
-variable "enable_integrity_monitoring" {
-  type        = bool
-}
-variable "enable_oslogin" {
-  type        = string
-  default     = "TRUE"
-}
+# variable "min_cpu_platform" {
+#   type        = string
+#   description = "Intel Skylake or Intel Haswell"
+# }
 variable "enable_nested_virtualization" {
   type        = bool
   description = "enable_nested_virtualization"
@@ -113,11 +103,6 @@ variable "kms_key_self_link" {
   description = "The self_link of the encryption key that is stored in Google Cloud KMS to encrypt this disk."
   default     = ""
 }
-variable "additional_disk_needed" {
-  type        = bool
-  description = "Is Additional disk needed."
-}
-
 variable "address_type" {
   type        = string
   description = "The type of address to reserve. Default value is EXTERNAL. Possible values are INTERNAL and EXTERNAL"
@@ -163,13 +148,13 @@ variable "address" {
 #   description = "The schedule vm is need to be true but the default is false"
 
 # }
-# variable "gpu_type" {
-#   description = ""
-#   type = string
+variable "gpu_type" {
+  description = ""
+  type = string
   
-# }
-# variable "gpu_count" {
-#   description = ""
-#   type = number
+}
+variable "gpu_count" {
+  description = ""
+  type = number
   
-# }
+}

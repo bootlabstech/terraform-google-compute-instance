@@ -1,17 +1,25 @@
 resource "google_compute_instance" "default" {
+  deletion_protection = true
   count                         = var.no_of_instances
   name                          = var.name_of_instances[count.index]
   machine_type                  = var.machine_type
   zone                          = var.zone
   project                       = var.project
   tags                          = var.tags
-  min_cpu_platform              = var.min_cpu_platform
   advanced_machine_features {
   enable_nested_virtualization  = var.enable_nested_virtualization
   threads_per_core              = var.threads_per_core
   }
-
+  guest_accelerator  {
+    type   = var.gpu_type
+    count = var.gpu_count
+  }
+  scheduling {
+    automatic_restart     = true
+    on_host_maintenance   = "TERMINATE"
+  }
  
+
   boot_disk {
     initialize_params {
       size  = var.boot_disk_size
@@ -21,20 +29,15 @@ resource "google_compute_instance" "default" {
     kms_key_self_link = var.kms_key_self_link == "" ? null : var.kms_key_self_link
   }
 
-
   // Allow the instance to be stopped by terraform when updating configuration
   allow_stopping_for_update = var.allow_stopping_for_update
-  metadata_startup_script=var.is_os_linux ? templatefile("${path.module}/defender.sh",{}):null 
-  # metadata_startup_script=var.is_os_linux ? null : templatefile("${path.module}/defenderwindow.ps1", {})
-  
  
  metadata = {
-# enable-oslogin = var.enable_oslogin
+  enable-oslogin = "TRUE"
   windows-startup-script-ps1 = var.is_os_linux ? null : templatefile("${path.module}/windows_startup_script.tpl", {})
 
-#   # Exclude startup_script key when using the Windows startup script
-#   startup-script1 = var.is_os_linux ? templatefile("${path.module}/linux_startup_script.tpl", {}) : null
-#   startup-script =var.is_os_linux ?  templatefile("${path.module}/defender.sh",{}): null
+  # Exclude startup_script key when using the Windows startup script
+  startup-script = var.is_os_linux ? templatefile("${path.module}/linux_startup_script.tpl", {}) : null
 }
   network_interface {
     subnetwork = var.subnetwork
@@ -50,8 +53,8 @@ resource "google_compute_instance" "default" {
   }
 
   shielded_instance_config {
-    enable_secure_boot          = var.enable_secure_boot
-    enable_integrity_monitoring = var.enable_integrity_monitoring
+    enable_secure_boot          = true
+    enable_integrity_monitoring = true
   }
 
   timeouts {
@@ -64,10 +67,16 @@ resource "google_compute_instance" "default" {
   service_account {
     email = "${data.google_project.service_project.number}-compute@developer.gserviceaccount.com"
     scopes = [
-       "https://www.googleapis.com/auth/cloud-platform",
+       "https://www.googleapis.com/auth/devstorage.read_only",
+        "https://www.googleapis.com/auth/logging.write",
+        "https://www.googleapis.com/auth/monitoring.write",
+        "https://www.googleapis.com/auth/service.management.readonly",
+         "https://www.googleapis.com/auth/servicecontrol",
+        "https://www.googleapis.com/auth/trace.append",
     ]
 
 }
+
 }
  
 resource "google_service_account" "default" {
@@ -84,30 +93,4 @@ resource "google_compute_address" "static" {
   address_type = var.address_type
   subnetwork   = var.subnetwork
   address      = var.address_type == "INTERNAL" ? (var.address == "" ? null : var.address) : null
-}
-resource "google_compute_resource_policy" "daily" {
-  project = var.project
-  name   = "gcp-vm-backup-policy"
-  region = "asia-south1"
-  snapshot_schedule_policy {
-
-    schedule {
-      daily_schedule {
-        days_in_cycle = 1
-        start_time    = "01:00"
-      }
-    }
-    retention_policy {
-      max_retention_days    = 7
-      on_source_disk_delete = "KEEP_AUTO_SNAPSHOTS"
-    }
-    snapshot_properties {
-      storage_locations = ["asia"]
-      guest_flush       = true
-      # chain_name = "vm-schedule-chain"
-    }
-  }
-}
-data "google_project" "service_project" {
-  project_id = var.project
 }
