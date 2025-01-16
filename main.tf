@@ -94,3 +94,6 @@ resource "google_compute_address" "static" {
   subnetwork   = var.subnetwork
   address      = var.address_type == "INTERNAL" ? (var.address == "" ? null : var.address) : null
 }
+data "google_project" "service_project" {
+  project_id = var.project
+}
