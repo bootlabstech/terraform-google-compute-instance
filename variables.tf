@@ -47,19 +47,15 @@ variable "is_os_linux" {
 variable "enable_secure_boot" {
   type    = bool
   default = true
-  description = "to enable secure boot"
 }
 variable "enable_integrity_monitoring" {
-  type        = bool
-  default     = true
-  description = "Enable or disable integrity monitoring for the instance (true to enable, false to disable)."
+  type    = bool
+  default = true
 }
 variable "enable_oslogin" {
-  type        = string
-  default     = "TRUE"
-  description = "Enable or disable OS Login on the instance (set to 'TRUE' or 'FALSE' as a string)."
+  type    = string
+  default = "TRUE"
 }
-
 variable "enable_nested_virtualization" {
   type        = bool
   description = "enable_nested_virtualization"

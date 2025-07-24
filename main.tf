@@ -1,8 +1,6 @@
-
-
 resource "google_compute_instance" "default" {
   count        = var.no_of_instances
-  name         = var.no_of_instances > 1 ? "${var.name_of_instance}-${count.index}" : var.name_of_instance
+  name         = "${var.name_of_instance}-${count.index}"
   machine_type = var.machine_type
   zone         = var.zone
   project      = var.project_id
@@ -52,21 +50,14 @@ resource "google_compute_instance" "default" {
   }
 
   lifecycle {
-    ignore_changes = [boot_disk, attached_disk, labels, metadata, service_account, tags]
-  }
-  service_account {
-    email = "${data.google_project.service_project.number}-compute@developer.gserviceaccount.com"
-    scopes = [
-       "https://www.googleapis.com/auth/cloud-platform",
-    ]
-    
+    ignore_changes = [boot_disk, service_account, attached_disk, labels, tags]
   }
 
 }
 
 resource "google_compute_address" "static" {
   count        = var.address_type == "INTERNAL" ? (var.address == "" ? 0 : 1) : 1
-  name         = var.no_of_instances > 1 ? "${var.name_of_instance}-${count.index}-staticip" : "${var.name_of_instance}--staticip"
+  name         = "${var.name_of_instance}-staticip"
   project      = var.project_id
   region       = var.compute_address_region
   address_type = var.address_type
@@ -76,7 +67,7 @@ resource "google_compute_address" "static" {
 resource "google_compute_disk" "boot_disk" {
   count   = var.no_of_instances
   project = var.project_id
-  name    = var.no_of_instances > 1 ? "${var.name_of_instance}-${count.index}-maindisk" : "${var.name_of_instance}-maindisk"
+  name    = "${var.name_of_instance}-${count.index}"
   size    = var.boot_disk_size
   type    = var.boot_disk_type
   image   = var.boot_disk_image
@@ -84,12 +75,11 @@ resource "google_compute_disk" "boot_disk" {
     disk_encryption_key {
     kms_key_self_link = var.kms_key_self_link
   }
-  depends_on = [ google_project_iam_binding.network_binding2 ]
 }
 resource "google_compute_disk" "additional_disk" {
   project = var.project_id
   count   = var.additional_disk_needed ? var.no_of_instances : 0
-  name    = var.no_of_instances > 1 ? "${var.name_of_instance}-${count.index}-addtnl" : "${var.name_of_instance}-addtnl"
+  name    = "${var.name_of_instance}-${count.index}-addtnl"
   size    = var.disk_size
   type    = var.disk_type
   zone    = var.zone
@@ -100,11 +90,11 @@ resource "google_compute_disk" "additional_disk" {
 resource "google_compute_attached_disk" "attachvmtoaddtnl" {
   count   = var.additional_disk_needed ? var.no_of_instances : 0
   disk     = google_compute_disk.additional_disk[count.index].id
-  instance = var.no_of_instances > 1 ? "${var.name_of_instance}-${count.index}" : var.name_of_instance
+  instance = "${var.name_of_instance}-${count.index}"
   project  = var.project_id
   zone     = var.zone
   depends_on = [
-    google_compute_disk.additional_disk,google_compute_instance.default
+    google_compute_disk.additional_disk
   ]
 }     
 resource "google_compute_resource_policy" "daily" {
@@ -128,19 +118,4 @@ resource "google_compute_resource_policy" "daily" {
       guest_flush       = true
     }
   }
-}
-data "google_project" "service_project" {
-  project_id = var.project_id
-}
-resource "google_project_iam_binding" "network_binding2" {
-  count   = 1
-  project =var.project_id
-  lifecycle {
-    ignore_changes = [ members ]
-  }
-  role    = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
-  members = [
-    "serviceAccount:service-${data.google_project.service_project.number}@compute-system.iam.gserviceaccount.com",
-    
-  ]
 }
