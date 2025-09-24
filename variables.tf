@@ -79,7 +79,8 @@ variable "project_id" {
 variable "tags" {
   type        = list(string)
   description = "A list of network tags to attach to the instance."
-  default     = ["compliant"]
+  default     = []
+  
 }
 variable "labels" {
   type        = map(string)

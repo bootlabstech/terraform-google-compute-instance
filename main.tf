@@ -6,6 +6,7 @@ resource "google_compute_instance" "default" {
   project      = var.project_id
   tags         = var.tags
   labels       = var.labels
+
   advanced_machine_features {
     enable_nested_virtualization = var.enable_nested_virtualization
     threads_per_core             = var.threads_per_core
@@ -14,7 +15,6 @@ resource "google_compute_instance" "default" {
     source            = google_compute_disk.boot_disk[count.index].id
     kms_key_self_link = var.kms_key_self_link == "" ? null : var.kms_key_self_link
   }
-
   // Allow the instance to be stopped by terraform when updating configuration
   allow_stopping_for_update = var.allow_stopping_for_update
 
@@ -51,7 +51,7 @@ resource "google_compute_instance" "default" {
   }
 
   lifecycle {
-    ignore_changes = [boot_disk, attached_disk, labels, metadata, service_account, tags]
+    ignore_changes = [boot_disk, attached_disk, metadata, service_account]
   }
   service_account {
     email = "${data.google_project.service_project.number}-compute@developer.gserviceaccount.com"
@@ -60,6 +60,11 @@ resource "google_compute_instance" "default" {
     ]
 
   }
+params{
+  resource_manager_tags = {
+    "tagKeys/281480412759198": "tagValues/281483498643520"
+  }
+}
 
 }
 
