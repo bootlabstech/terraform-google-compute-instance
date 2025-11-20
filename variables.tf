@@ -130,10 +130,10 @@ variable "address" {
   description = "The private ip of the compute-instance"
   default     = ""
 }
-variable "policy_name" {
-  type        = string
-  description = "the policy  name for snapshot scheduler"
-}
+# variable "policy_name" {
+#   type        = string
+#   description = "the policy  name for snapshot scheduler"
+# }
 variable "disk_type" {
   type        = string
   description = "The additional_disk_type of the VM."
