@@ -60,11 +60,11 @@ resource "google_compute_instance" "default" {
     ]
 
   }
-params{
-  resource_manager_tags = {
-    "tagKeys/281480412759198": "tagValues/281483498643520"
-  }
-}
+# params{
+#   resource_manager_tags = {
+#     "tagKeys/281480412759198": "tagValues/281483498643520"
+#   }
+# }
 
 }
 
