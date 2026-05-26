@@ -1,4 +1,14 @@
-/*output "compute_instance_serviceaccount" {
-  description = "The email/name of the compute instance service account"
-  value       = length(google_service_account.default) > 0 ? google_service_account.default[0].email : "service is account not created, enable create_service_account"
-}*/
+output "project_id" {
+  description = "GCP Project ID"
+  value       = var.project_id
+}
+
+output "cloud" {
+  description = "Cloud Provider"
+  value       = "GCP"
+}
+
+output "instance_self_link" {
+  description = "GCP Instance Self Link"
+  value       = google_compute_instance.default[0].self_link
+}
