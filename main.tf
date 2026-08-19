@@ -50,7 +50,7 @@ resource "google_compute_instance" "default" {
   }
 
   lifecycle {
-    ignore_changes = [boot_disk, attached_disk, metadata, service_account, provisioned_iops   ]
+    ignore_changes = [boot_disk, attached_disk, metadata, service_account]
   }
   service_account {
     email = "${data.google_project.service_project.number}-compute@developer.gserviceaccount.com"
@@ -98,6 +98,11 @@ resource "google_compute_disk" "additional_disk" {
   zone    = var.zone
   disk_encryption_key {
     kms_key_self_link = var.kms_key_self_link
+  }
+  lifecycle {
+    ignore_changes = [
+      provisioned_iops
+    ]
   }
 }
 resource "google_compute_attached_disk" "attachvmtoaddtnl" {
