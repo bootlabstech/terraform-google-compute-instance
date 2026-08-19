@@ -50,7 +50,7 @@ resource "google_compute_instance" "default" {
   }
 
   lifecycle {
-    ignore_changes = [boot_disk, attached_disk, metadata, service_account]
+    ignore_changes = [boot_disk, attached_disk, metadata, service_account, provisioned_iops   ]
   }
   service_account {
     email = "${data.google_project.service_project.number}-compute@developer.gserviceaccount.com"
