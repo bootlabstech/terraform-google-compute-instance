@@ -80,7 +80,7 @@ variable "tags" {
   type        = list(string)
   description = "A list of network tags to attach to the instance."
   default     = []
-  
+
 }
 variable "labels" {
   type        = map(string)
@@ -112,10 +112,7 @@ variable "allow_stopping_for_update" {
   description = "If true, allows Terraform to stop the instance to update its properties. If you try to update a property that requires stopping the instance without setting this field, the update will fail."
   default     = true
 }
-variable "kms_key_self_link" {
-  type        = string
-  description = "The self_link of the encryption key that is stored in Google Cloud KMS to encrypt this disk."
-}
+
 variable "additional_disk_needed" {
   type        = bool
   description = "Is Additional disk needed."

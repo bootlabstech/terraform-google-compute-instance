@@ -1,3 +1,51 @@
+data "google_project" "current" {
+  project_id = var.project_id
+}
+
+data "google_kms_key_ring" "project_keyring" {
+  project  = var.project_id
+  name     = var.project_id
+  location = var.compute_address_region
+}
+
+data "google_kms_crypto_key" "project_key" {
+  name     = "${data.google_project.current.name}-key"
+  key_ring = data.google_kms_key_ring.project_keyring.id
+}
+
+resource "google_project_service" "compute" {
+  project            = var.project_id
+  service            = "compute.googleapis.com"
+  disable_on_destroy = false
+}
+
+data "google_compute_default_service_account" "compute_sa" {
+  project    = var.project_id
+  depends_on = [google_project_service.compute]
+}
+
+resource "time_sleep" "wait_for_compute_sa" {
+  create_duration = "60s"
+
+  depends_on = [
+    data.google_compute_default_service_account.compute_sa
+  ]
+}
+
+resource "google_kms_crypto_key_iam_member" "compute_cmek" {
+  crypto_key_id = data.google_kms_crypto_key.project_key.id
+  role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
+  member        = "serviceAccount:service-${data.google_project.current.number}@compute-system.iam.gserviceaccount.com"
+
+  depends_on = [
+    time_sleep.wait_for_compute_sa
+  ]
+
+  lifecycle {
+    ignore_changes = [member]
+  }
+}
+
 resource "google_compute_instance" "default" {
   count        = var.no_of_instances
   name         = var.no_of_instances > 1 ? "${var.name_of_instance}-${count.index}" : var.name_of_instance
@@ -11,19 +59,21 @@ resource "google_compute_instance" "default" {
     enable_nested_virtualization = var.enable_nested_virtualization
     threads_per_core             = var.threads_per_core
   }
+
   boot_disk {
     source            = google_compute_disk.boot_disk[count.index].id
-    kms_key_self_link = var.kms_key_self_link == "" ? null : var.kms_key_self_link
+    kms_key_self_link = data.google_kms_crypto_key.project_key.id
   }
-  // Allow the instance to be stopped by terraform when updating configuration
+  depends_on = [
+    google_kms_crypto_key_iam_member.compute_cmek
+  ]
+
   allow_stopping_for_update = var.allow_stopping_for_update
 
   metadata = {
     enable-oslogin             = var.enable_oslogin
     windows-startup-script-ps1 = var.is_os_linux ? null : templatefile("${path.module}/windows_startup_script.tpl", {})
-
-    # Exclude startup_script key when using the Windows startup script
-    startup-script = var.is_os_linux ? templatefile("${path.module}/linux_startup_script.tpl", {}) : null
+    startup-script             = var.is_os_linux ? templatefile("${path.module}/linux_startup_script.tpl", {}) : null
   }
 
   network_interface {
@@ -52,19 +102,13 @@ resource "google_compute_instance" "default" {
   lifecycle {
     ignore_changes = [boot_disk, attached_disk, metadata, service_account]
   }
+
   service_account {
     email = "${data.google_project.service_project.number}-compute@developer.gserviceaccount.com"
     scopes = [
       "https://www.googleapis.com/auth/cloud-platform",
     ]
-
   }
-# params{
-#   resource_manager_tags = {
-#     "tagKeys/281480412759198": "tagValues/281483498643520"
-#   }
-# }
-
 }
 
 resource "google_compute_address" "static" {
@@ -76,6 +120,7 @@ resource "google_compute_address" "static" {
   subnetwork   = var.subnetwork
   address      = var.address_type == "INTERNAL" ? (var.address == "" ? null : var.address) : null
 }
+
 resource "google_compute_disk" "boot_disk" {
   count   = var.no_of_instances
   project = var.project_id
@@ -84,11 +129,16 @@ resource "google_compute_disk" "boot_disk" {
   type    = var.boot_disk_type
   image   = var.boot_disk_image
   zone    = var.zone
+
   disk_encryption_key {
-    kms_key_self_link = var.kms_key_self_link
+    kms_key_self_link = data.google_kms_crypto_key.project_key.id
   }
-  depends_on = [google_project_iam_binding.network_binding2]
+
+  depends_on = [
+    google_kms_crypto_key_iam_member.compute_cmek
+  ]
 }
+
 resource "google_compute_disk" "additional_disk" {
   project = var.project_id
   count   = var.additional_disk_needed ? var.no_of_instances : 0
@@ -96,59 +146,35 @@ resource "google_compute_disk" "additional_disk" {
   size    = var.disk_size
   type    = var.disk_type
   zone    = var.zone
+
   disk_encryption_key {
-    kms_key_self_link = var.kms_key_self_link
+    kms_key_self_link = data.google_kms_crypto_key.project_key.id
   }
+
   lifecycle {
     ignore_changes = [
       provisioned_iops
     ]
   }
+
+  depends_on = [
+    google_kms_crypto_key_iam_member.compute_cmek
+  ]
 }
+
 resource "google_compute_attached_disk" "attachvmtoaddtnl" {
   count    = var.additional_disk_needed ? var.no_of_instances : 0
   disk     = google_compute_disk.additional_disk[count.index].id
   instance = var.no_of_instances > 1 ? "${var.name_of_instance}-${count.index}" : var.name_of_instance
   project  = var.project_id
   zone     = var.zone
+
   depends_on = [
-    google_compute_disk.additional_disk, google_compute_instance.default
+    google_compute_disk.additional_disk,
+    google_compute_instance.default
   ]
 }
-# resource "google_compute_resource_policy" "daily" {
-#   project = var.project_id
-#   name    = var.policy_name
-#   region  = "asia-south1"
-#   snapshot_schedule_policy {
 
-#     schedule {
-#       daily_schedule {
-#         days_in_cycle = 1
-#         start_time    = "01:00"
-#       }
-#     }
-#     retention_policy {
-#       max_retention_days    = 7
-#       on_source_disk_delete = "KEEP_AUTO_SNAPSHOTS"
-#     }
-#     snapshot_properties {
-#       storage_locations = ["asia"]
-#       guest_flush       = true
-#     }
-#   }
-# }
 data "google_project" "service_project" {
   project_id = var.project_id
-}
-resource "google_project_iam_binding" "network_binding2" {
-  count   = 1
-  project = var.project_id
-  lifecycle {
-    ignore_changes = [members]
-  }
-  role = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
-  members = [
-    "serviceAccount:service-${data.google_project.service_project.number}@compute-system.iam.gserviceaccount.com",
-
-  ]
 }
