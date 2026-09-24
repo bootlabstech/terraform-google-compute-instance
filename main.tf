@@ -2,17 +2,6 @@ data "google_project" "current" {
   project_id = var.project_id
 }
 
-data "google_kms_key_ring" "project_keyring" {
-  project  = var.project_id
-  name     = var.project_id
-  location = var.compute_address_region
-}
-
-data "google_kms_crypto_key" "project_key" {
-  name     = "${data.google_project.current.name}-key"
-  key_ring = data.google_kms_key_ring.project_keyring.id
-}
-
 resource "google_project_service" "compute" {
   project            = var.project_id
   service            = "compute.googleapis.com"
@@ -33,7 +22,7 @@ resource "time_sleep" "wait_for_compute_sa" {
 }
 
 resource "google_kms_crypto_key_iam_member" "compute_cmek" {
-  crypto_key_id = data.google_kms_crypto_key.project_key.id
+  crypto_key_id = "projects/${var.project_id}/locations/${var.compute_address_region}/keyRings/${var.project_id}/cryptoKeys/${data.google_project.current.name}-key"
   role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
   member        = "serviceAccount:service-${data.google_project.current.number}@compute-system.iam.gserviceaccount.com"
 
@@ -62,7 +51,7 @@ resource "google_compute_instance" "default" {
 
   boot_disk {
     source            = google_compute_disk.boot_disk[count.index].id
-    kms_key_self_link = data.google_kms_crypto_key.project_key.id
+    kms_key_self_link = "projects/${var.project_id}/locations/${var.compute_address_region}/keyRings/${var.project_id}/cryptoKeys/${data.google_project.current.name}-key"
   }
   depends_on = [
     google_kms_crypto_key_iam_member.compute_cmek
@@ -131,7 +120,7 @@ resource "google_compute_disk" "boot_disk" {
   zone    = var.zone
 
   disk_encryption_key {
-    kms_key_self_link = data.google_kms_crypto_key.project_key.id
+    kms_key_self_link = "projects/${var.project_id}/locations/${var.compute_address_region}/keyRings/${var.project_id}/cryptoKeys/${data.google_project.current.name}-key"
   }
 
   depends_on = [
@@ -148,7 +137,7 @@ resource "google_compute_disk" "additional_disk" {
   zone    = var.zone
 
   disk_encryption_key {
-    kms_key_self_link = data.google_kms_crypto_key.project_key.id
+    kms_key_self_link = "projects/${var.project_id}/locations/${var.compute_address_region}/keyRings/${var.project_id}/cryptoKeys/${data.google_project.current.name}-key"
   }
 
   lifecycle {
@@ -174,7 +163,3 @@ resource "google_compute_attached_disk" "attachvmtoaddtnl" {
     google_compute_instance.default
   ]
 }
-
-# data "google_project" "service_project" {
-#   project_id = var.project_id
-# }
