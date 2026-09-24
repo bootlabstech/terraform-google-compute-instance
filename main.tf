@@ -104,7 +104,7 @@ resource "google_compute_instance" "default" {
   }
 
   service_account {
-    email = "${data.google_project.service_project.number}-compute@developer.gserviceaccount.com"
+    email = "${data.google_project.current.number}-compute@developer.gserviceaccount.com"
     scopes = [
       "https://www.googleapis.com/auth/cloud-platform",
     ]
@@ -175,6 +175,6 @@ resource "google_compute_attached_disk" "attachvmtoaddtnl" {
   ]
 }
 
-data "google_project" "service_project" {
-  project_id = var.project_id
-}
+# data "google_project" "service_project" {
+#   project_id = var.project_id
+# }
